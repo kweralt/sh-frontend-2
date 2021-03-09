@@ -7,15 +7,22 @@ import {
   TableBody,
   TableRow,
   TableCell,
+  Toolbar,
+  InputAdornment,
 } from "@material-ui/core";
 import { useState } from "react";
 import useTable from "../components/useTable";
 import * as tenantServices from "../services/tenantServices";
+import Controls from "../components/controls/Controls";
+import { Search } from "@material-ui/icons";
 
 const useStyles = makeStyles((theme) => ({
   pageContent: {
     margin: theme.spacing(5),
     padding: theme.spacing(3),
+  },
+  searchInput: {
+    width: "75%",
   },
 }));
 
@@ -29,12 +36,31 @@ const headCells = [
 export default function Tenants() {
   const classes = useStyles();
   const [records, setRecords] = useState(tenantServices.getAllTenants());
+  const [filterFn, setFilterFn] = useState({
+    fn: (items) => {
+      return items;
+    },
+  });
+
   const {
     TblContainer,
     TblHead,
     TblPagination,
     recordsAfterPagingAndSorting,
-  } = useTable(records, headCells);
+  } = useTable(records, headCells, filterFn);
+
+  const handleSearch = (e) => {
+    let target = e.target;
+    setFilterFn({
+      fn: (items) => {
+        if (target.value == "") return items;
+        else
+          return items.filter((x) =>
+            x.fullName.toLowerCase().includes(target.value)
+          );
+      },
+    });
+  };
 
   return (
     <>
@@ -44,7 +70,21 @@ export default function Tenants() {
         icon={<PeopleOutlineTwoTone fontSize="large" />}
       />
       <Paper className={classes.pageContent}>
-        <TenantForm />
+        {/* <TenantForm /> */}
+        <Toolbar>
+          <Controls.Input
+            label="Search Tenants"
+            className={classes.searchInput}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <Search />
+                </InputAdornment>
+              ),
+            }}
+            onChange={handleSearch}
+          />
+        </Toolbar>
         <TblContainer>
           <TblHead />
           <TableBody>
