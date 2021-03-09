@@ -57,7 +57,11 @@ export default function TenantForm() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (validate()) window.alert("FORM IS VALID");
+    if (validate()) {
+      window.alert("FORM IS VALID");
+      tenantServices.insertTenant(values);
+      resetForm();
+    }
   };
 
   return (

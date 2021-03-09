@@ -4,3 +4,30 @@ export const getDepartmentCollection = () => [
   { id: "3", title: "Accounting" },
   { id: "4", title: "HR" },
 ];
+
+const KEYS = {
+  tenants: "tenants",
+  tenantId: "tenantId",
+};
+
+// save into localStorage then convert to JSON
+export function insertTenant(data) {
+  let tenants = getAllTenants();
+  data["id"] = generateTenantId();
+  tenants.push(data);
+  localStorage.setItem(KEYS.tenants, JSON.stringify(tenants));
+}
+
+export function generateTenantId() {
+  if (localStorage.getItem(KEYS.tenantId) == null)
+    localStorage.setItem(KEYS.tenantId, "0");
+  var id = parseInt(localStorage.getItem(KEYS.tenantId));
+  localStorage.setItem(KEYS.tenantId, (++id).toString());
+  return id;
+}
+
+export function getAllTenants() {
+  if (localStorage.getItem(KEYS.tenants) == null)
+    localStorage.setItem(KEYS.tenants, JSON.stringify([]));
+  return JSON.parse(localStorage.getItem(KEYS.tenants));
+}
