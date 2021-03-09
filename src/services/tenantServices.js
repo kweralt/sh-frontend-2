@@ -29,5 +29,11 @@ export function generateTenantId() {
 export function getAllTenants() {
   if (localStorage.getItem(KEYS.tenants) == null)
     localStorage.setItem(KEYS.tenants, JSON.stringify([]));
-  return JSON.parse(localStorage.getItem(KEYS.tenants));
+  let tenants = JSON.parse(localStorage.getItem(KEYS.tenants));
+  // map departmentId to department title
+  let departments = getDepartmentCollection();
+  return tenants.map((x) => ({
+    ...x,
+    department: departments[x.departmentId - 1].title, //relationship is -1 to test
+  }));
 }
