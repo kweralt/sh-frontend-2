@@ -22,6 +22,7 @@ import {
 } from "@material-ui/icons";
 import Popup from "../components/Popup";
 import Notification from "../components/Notification";
+import ConfirmDialog from "../components/ConfirmDialog";
 
 const useStyles = makeStyles((theme) => ({
   pageContent: {
@@ -59,6 +60,11 @@ export default function Tenants() {
     isOpen: false,
     messsage: "",
     type: "",
+  });
+  const [confirmDialog, setConfirmDialog] = useState({
+    isOpen: false,
+    title: "",
+    subTitle: "",
   });
 
   const {
@@ -101,15 +107,17 @@ export default function Tenants() {
   };
 
   const onDelete = (id) => {
-    if (window.confirm("Do you really want to delete this record?")) {
-      tenantServices.deleteTenant(id);
-      setRecords(tenantServices.getAllTenants());
-      setNotify({
-        isOpen: true,
-        message: "Deleted Successfully",
-        type: "error",
-      });
-    }
+    setConfirmDialog({
+      ...confirmDialog,
+      isOpen: false,
+    });
+    tenantServices.deleteTenant(id);
+    setRecords(tenantServices.getAllTenants());
+    setNotify({
+      isOpen: true,
+      message: "Deleted Successfully",
+      type: "error",
+    });
   };
 
   return (
@@ -165,7 +173,14 @@ export default function Tenants() {
                   <Controls.ActionButton
                     color="secondary"
                     onClick={() => {
-                      onDelete(item.id);
+                      setConfirmDialog({
+                        isOpen: true,
+                        title: "Do you really want to delete this record",
+                        subTitle: "You can't undo this operation",
+                        onConfirm: () => {
+                          onDelete(item.id);
+                        },
+                      });
                     }}
                   >
                     <Close fontSize="small" />
@@ -185,6 +200,10 @@ export default function Tenants() {
         <TenantForm recordForEdit={recordForEdit} addOrEdit={addOrEdit} />
       </Popup>
       <Notification notify={notify} setNotify={setNotify} />
+      <ConfirmDialog
+        confirmDialog={confirmDialog}
+        setConfirmDialog={setConfirmDialog}
+      />
     </>
   );
 }
