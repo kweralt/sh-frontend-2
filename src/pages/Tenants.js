@@ -14,7 +14,8 @@ import { useState } from "react";
 import useTable from "../components/useTable";
 import * as tenantServices from "../services/tenantServices";
 import Controls from "../components/controls/Controls";
-import { Search } from "@material-ui/icons";
+import { Search, Add } from "@material-ui/icons";
+import Popup from "../components/Popup";
 
 const useStyles = makeStyles((theme) => ({
   pageContent: {
@@ -24,13 +25,18 @@ const useStyles = makeStyles((theme) => ({
   searchInput: {
     width: "75%",
   },
+  newButton: {
+    position: "absolute",
+    right: "10px",
+  },
 }));
 
 const headCells = [
   { id: "fullName", label: "Tenant Name" },
   { id: "email", label: "Email Address" },
   { id: "mobile", label: "Phone Number" },
-  { id: "department", label: "Department", disableSorting: true },
+  { id: "department", label: "Department" },
+  { id: "actions", label: "Actions", disableSorting: true },
 ];
 
 export default function Tenants() {
@@ -41,6 +47,7 @@ export default function Tenants() {
       return items;
     },
   });
+  const [openPopup, setOpenPopup] = useState(false);
 
   const {
     TblContainer,
@@ -62,6 +69,13 @@ export default function Tenants() {
     });
   };
 
+  const addOrEdit = (tenant, resetForm) => {
+    tenantServices.insertTenant(tenant);
+    resetForm();
+    setOpenPopup(false);
+    setRecords(tenantServices.getAllTenants());
+  };
+
   return (
     <>
       <PageHeader
@@ -70,7 +84,6 @@ export default function Tenants() {
         icon={<PeopleOutlineTwoTone fontSize="large" />}
       />
       <Paper className={classes.pageContent}>
-        {/* <TenantForm /> */}
         <Toolbar>
           <Controls.Input
             label="Search Tenants"
@@ -83,6 +96,13 @@ export default function Tenants() {
               ),
             }}
             onChange={handleSearch}
+          />
+          <Controls.Button
+            text="Add New"
+            variant="outlined"
+            startIcon={<Add />}
+            className={classes.newButton}
+            onClick={() => setOpenPopup(true)}
           />
         </Toolbar>
         <TblContainer>
@@ -100,6 +120,13 @@ export default function Tenants() {
         </TblContainer>
         <TblPagination />
       </Paper>
+      <Popup
+        openPopup={openPopup}
+        setOpenPopup={setOpenPopup}
+        title="Add New Tenant"
+      >
+        <TenantForm addOrEdit={addOrEdit} />
+      </Popup>
     </>
   );
 }

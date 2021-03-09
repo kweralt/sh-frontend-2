@@ -21,7 +21,9 @@ const initialFValues = {
   isPermanent: false,
 };
 
-export default function TenantForm() {
+export default function TenantForm(props) {
+  const { addOrEdit } = props;
+
   const validate = (fieldValues = values) => {
     // only update based on properties below
     let temp = { ...errors };
@@ -59,8 +61,7 @@ export default function TenantForm() {
     e.preventDefault();
     if (validate()) {
       window.alert("FORM IS VALID");
-      tenantServices.insertTenant(values);
-      resetForm();
+      addOrEdit(values, resetForm);
     }
   };
 
