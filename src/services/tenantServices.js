@@ -44,3 +44,9 @@ export function updateTenant(data) {
   tenants[recordIndex] = { ...data };
   localStorage.setItem(KEYS.tenants, JSON.stringify(tenants));
 }
+
+export function deleteTenant(id) {
+  let tenants = getAllTenants();
+  tenants = tenants.filter((x) => x.id != id);
+  localStorage.setItem(KEYS.tenants, JSON.stringify(tenants));
+}

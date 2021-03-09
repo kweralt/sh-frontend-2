@@ -21,6 +21,7 @@ import {
   PeopleOutlineTwoTone,
 } from "@material-ui/icons";
 import Popup from "../components/Popup";
+import Notification from "../components/Notification";
 
 const useStyles = makeStyles((theme) => ({
   pageContent: {
@@ -54,6 +55,11 @@ export default function Tenants() {
     },
   });
   const [openPopup, setOpenPopup] = useState(false);
+  const [notify, setNotify] = useState({
+    isOpen: false,
+    messsage: "",
+    type: "",
+  });
 
   const {
     TblContainer,
@@ -82,11 +88,28 @@ export default function Tenants() {
     setRecordForEdit(null);
     setOpenPopup(false);
     setRecords(tenantServices.getAllTenants());
+    setNotify({
+      isOpen: true,
+      message: "Submitted Successfully",
+      type: "success",
+    });
   };
 
   const openInPopup = (item) => {
     setRecordForEdit(item);
     setOpenPopup(true);
+  };
+
+  const onDelete = (id) => {
+    if (window.confirm("Do you really want to delete this record?")) {
+      tenantServices.deleteTenant(id);
+      setRecords(tenantServices.getAllTenants());
+      setNotify({
+        isOpen: true,
+        message: "Deleted Successfully",
+        type: "error",
+      });
+    }
   };
 
   return (
@@ -139,7 +162,12 @@ export default function Tenants() {
                   >
                     <EditOutlined fontSize="small" />
                   </Controls.ActionButton>
-                  <Controls.ActionButton color="secondary">
+                  <Controls.ActionButton
+                    color="secondary"
+                    onClick={() => {
+                      onDelete(item.id);
+                    }}
+                  >
                     <Close fontSize="small" />
                   </Controls.ActionButton>
                 </TableCell>
@@ -156,6 +184,7 @@ export default function Tenants() {
       >
         <TenantForm recordForEdit={recordForEdit} addOrEdit={addOrEdit} />
       </Popup>
+      <Notification notify={notify} setNotify={setNotify} />
     </>
   );
 }
