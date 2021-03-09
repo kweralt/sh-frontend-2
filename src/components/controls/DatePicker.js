@@ -20,6 +20,8 @@ export default function DatePicker(props) {
         inputVariant="outlined"
         label={label}
         format="MMM/dd/yyyy"
+        name={name}
+        value={value}
         onChange={(date) => onChange(convertToDefEventPara(name, date))}
       ></KeyboardDatePicker>
     </MuiPickersUtilsProvider>

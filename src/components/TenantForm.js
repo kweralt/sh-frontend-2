@@ -2,6 +2,7 @@ import { useForm, Form } from "../components/useForm";
 import { Grid } from "@material-ui/core";
 import Controls from "./controls/Controls";
 import * as tenantServices from "../services/tenantServices";
+import { useEffect } from "react";
 
 const genderItems = [
   { id: "male", title: "Male" },
@@ -22,7 +23,7 @@ const initialFValues = {
 };
 
 export default function TenantForm(props) {
-  const { addOrEdit } = props;
+  const { addOrEdit, recordForEdit } = props;
 
   const validate = (fieldValues = values) => {
     // only update based on properties below
@@ -39,13 +40,13 @@ export default function TenantForm(props) {
         fieldValues.mobile.length > 7 ? "" : "Minimum 8 numbers required.";
     if ("departmentId" in fieldValues)
       temp.departmentId =
-        fieldValues.departmentId.length != 0 ? "" : "This field is required.";
+        fieldValues.departmentId.length !== 0 ? "" : "This field is required.";
     setErrors({
       ...temp,
     });
 
     // every() returns true if all elements pass test
-    return Object.values(temp).every((x) => x == "");
+    return Object.values(temp).every((x) => x === "");
   };
 
   const {
@@ -64,6 +65,13 @@ export default function TenantForm(props) {
       addOrEdit(values, resetForm);
     }
   };
+
+  useEffect(() => {
+    if (recordForEdit != null)
+      setValues({
+        ...recordForEdit,
+      });
+  }, [recordForEdit]); // when recordForEdit changed, callback {setValues} invoked to populate form with current row details
 
   return (
     <Form onSubmit={handleSubmit}>

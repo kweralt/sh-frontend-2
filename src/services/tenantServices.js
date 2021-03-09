@@ -10,14 +10,6 @@ const KEYS = {
   tenantId: "tenantId",
 };
 
-// save into localStorage then convert to JSON
-export function insertTenant(data) {
-  let tenants = getAllTenants();
-  data["id"] = generateTenantId();
-  tenants.push(data);
-  localStorage.setItem(KEYS.tenants, JSON.stringify(tenants));
-}
-
 export function generateTenantId() {
   if (localStorage.getItem(KEYS.tenantId) == null)
     localStorage.setItem(KEYS.tenantId, "0");
@@ -36,4 +28,19 @@ export function getAllTenants() {
     ...x,
     department: departments[x.departmentId - 1].title, //relationship is -1 to test
   }));
+}
+
+// save into localStorage then convert to JSON
+export function insertTenant(data) {
+  let tenants = getAllTenants();
+  data["id"] = generateTenantId();
+  tenants.push(data);
+  localStorage.setItem(KEYS.tenants, JSON.stringify(tenants));
+}
+
+export function updateTenant(data) {
+  let tenants = getAllTenants();
+  let recordIndex = tenants.findIndex((x) => x.id === data.id);
+  tenants[recordIndex] = { ...data };
+  localStorage.setItem(KEYS.tenants, JSON.stringify(tenants));
 }

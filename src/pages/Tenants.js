@@ -1,4 +1,3 @@
-import { PeopleOutlineTwoTone } from "@material-ui/icons";
 import TenantForm from "../components/TenantForm";
 import PageHeader from "../components/PageHeader";
 import {
@@ -14,7 +13,13 @@ import { useState } from "react";
 import useTable from "../components/useTable";
 import * as tenantServices from "../services/tenantServices";
 import Controls from "../components/controls/Controls";
-import { Search, Add } from "@material-ui/icons";
+import {
+  Search,
+  Add,
+  Close,
+  EditOutlined,
+  PeopleOutlineTwoTone,
+} from "@material-ui/icons";
 import Popup from "../components/Popup";
 
 const useStyles = makeStyles((theme) => ({
@@ -41,6 +46,7 @@ const headCells = [
 
 export default function Tenants() {
   const classes = useStyles();
+  const [recordForEdit, setRecordForEdit] = useState(null);
   const [records, setRecords] = useState(tenantServices.getAllTenants());
   const [filterFn, setFilterFn] = useState({
     fn: (items) => {
@@ -60,7 +66,7 @@ export default function Tenants() {
     let target = e.target;
     setFilterFn({
       fn: (items) => {
-        if (target.value == "") return items;
+        if (target.value === "") return items;
         else
           return items.filter((x) =>
             x.fullName.toLowerCase().includes(target.value)
@@ -70,10 +76,17 @@ export default function Tenants() {
   };
 
   const addOrEdit = (tenant, resetForm) => {
-    tenantServices.insertTenant(tenant);
+    if (tenant.id === 0) tenantServices.insertTenant(tenant);
+    else tenantServices.updateTenant(tenant);
     resetForm();
+    setRecordForEdit(null);
     setOpenPopup(false);
     setRecords(tenantServices.getAllTenants());
+  };
+
+  const openInPopup = (item) => {
+    setRecordForEdit(item);
+    setOpenPopup(true);
   };
 
   return (
@@ -102,7 +115,10 @@ export default function Tenants() {
             variant="outlined"
             startIcon={<Add />}
             className={classes.newButton}
-            onClick={() => setOpenPopup(true)}
+            onClick={() => {
+              setOpenPopup(true);
+              setRecordForEdit(null);
+            }}
           />
         </Toolbar>
         <TblContainer>
@@ -114,6 +130,19 @@ export default function Tenants() {
                 <TableCell>{item.email}</TableCell>
                 <TableCell>{item.mobile}</TableCell>
                 <TableCell>{item.department}</TableCell>
+                <TableCell>
+                  <Controls.ActionButton
+                    color="primary"
+                    onClick={() => {
+                      openInPopup(item);
+                    }}
+                  >
+                    <EditOutlined fontSize="small" />
+                  </Controls.ActionButton>
+                  <Controls.ActionButton color="secondary">
+                    <Close fontSize="small" />
+                  </Controls.ActionButton>
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
@@ -123,9 +152,9 @@ export default function Tenants() {
       <Popup
         openPopup={openPopup}
         setOpenPopup={setOpenPopup}
-        title="Add New Tenant"
+        title={"Tenant Form"}
       >
-        <TenantForm addOrEdit={addOrEdit} />
+        <TenantForm recordForEdit={recordForEdit} addOrEdit={addOrEdit} />
       </Popup>
     </>
   );
