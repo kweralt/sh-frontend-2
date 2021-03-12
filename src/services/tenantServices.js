@@ -47,6 +47,6 @@ export function updateTenant(data) {
 
 export function deleteTenant(id) {
   let tenants = getAllTenants();
-  tenants = tenants.filter((x) => x.id != id);
+  tenants = tenants.filter((x) => x.id !== id);
   localStorage.setItem(KEYS.tenants, JSON.stringify(tenants));
 }
