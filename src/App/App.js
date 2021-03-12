@@ -5,7 +5,8 @@ import { useTheme } from "../theme";
 import Reports from "../pages/Reports";
 import Tenants from "../pages/Tenants";
 import Dashboard from "../pages/Dashboard";
-import Home from "../pages/Home";
+// import Home from "../pages/Home";
+import Login from "../pages/Login";
 
 function App() {
   const [currentTheme, setCurrentTheme] = useTheme();
@@ -29,7 +30,7 @@ function App() {
                 <Dashboard />
               </Route>
               <Route path="/">
-                <Home />
+                <Login />
               </Route>
             </Switch>
           </div>
