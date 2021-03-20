@@ -1,5 +1,4 @@
 import {
-  TableContainer,
   Table,
   TableHead,
   TableRow,
@@ -25,7 +24,6 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: "#fffbf2",
       cursor: "pointer",
     },
-    minWidth: 650,
   },
 }));
 
@@ -39,9 +37,7 @@ export default function useTable(records, headCells, filterFn) {
   const [orderBy, setOrderBy] = useState();
 
   const TblContainer = (props) => (
-    <TableContainer>
-      <Table className={classes.table}>{props.children}</Table>
-    </TableContainer>
+    <Table className={classes.table}>{props.children}</Table>
   );
 
   const TblHead = (props) => {
@@ -90,6 +86,7 @@ export default function useTable(records, headCells, filterFn) {
 
   const TblPagination = () => (
     <TablePagination
+      component="div"
       page={page}
       rowsPerPageOptions={pages}
       rowsPerPage={rowsPerPage}

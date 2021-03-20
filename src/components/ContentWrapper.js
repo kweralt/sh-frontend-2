@@ -1,4 +1,4 @@
-// fix alignment with nav
+// wrap ur shit in this to fix alignment (i hope)
 import { Container } from "@material-ui/core";
 import { drawerWidth } from "./NavHeader";
 import { makeStyles } from "@material-ui/core";
