@@ -34,13 +34,6 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(5),
     padding: theme.spacing(3),
   },
-  searchInput: {
-    width: "75%",
-  },
-  newButton: {
-    position: "absolute",
-    right: "10px",
-  },
 }));
 
 const headCells = [
@@ -137,7 +130,6 @@ export default function Tenants() {
           <Toolbar>
             <Controls.Input
               label="Search Tenants"
-              className={classes.searchInput}
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
@@ -148,10 +140,9 @@ export default function Tenants() {
               onChange={handleSearch}
             />
             <Controls.Button
-              text="Add New"
+              text="Add"
               variant="outlined"
               startIcon={<Add />}
-              className={classes.newButton}
               onClick={() => {
                 setOpenPopup(true);
                 setRecordForEdit(null);
@@ -195,8 +186,8 @@ export default function Tenants() {
                 </TableRow>
               ))}
             </TableBody>
+            <TblPagination />
           </TblContainer>
-          <TblPagination />
         </Paper>
         <Popup
           openPopup={openPopup}
