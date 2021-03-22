@@ -38,10 +38,11 @@ const useStyles = makeStyles((theme) => ({
 
 // take credentials as arg, fetch() with POST method, return format {token: 'test123'}
 async function loginUser(credentials) {
-  // replace url here
-  return fetch("http://localhost:3000/login", {
-    method: "GET",
+  return fetch("http://localhost:8080/auth", {
+    mode: "cors",
+    method: "POST",
     headers: {
+      "Access-Control-Allow-Origin": "http://localhost:8080",
       "Content-Type": "application/json",
     },
     body: JSON.stringify(credentials),
