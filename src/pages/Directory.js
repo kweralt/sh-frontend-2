@@ -33,27 +33,38 @@ const headCells = [
     { id: "tenantName", label: "Tenant Name"},
     { id: "tenantEmail", label: "Tenant Email"},
     { id: "tenancyStart", label: "Tenancy Start"},
-    { id: "tenancyEnd", label: "Tenancy End"}
+    { id: "tenancyEnd", label: "Tenancy End"},
+    { id: "actions", label: "Actions", disableSorting: true}
 ];
 
-const getAllOutlets =  async () => {
-    const response = await fetch("http://localhost:8080/directory/outlets", {
-        mode: "cors",
-        method: "GET",
-        headers: {
-            "Access-Control-Allow-Origin": "http://localhost:8080"
-          }
-    });
-    return response.json();
-}
-
 export default function Directory() {
-    const [records, setRecords] = useState(getAllOutlets());
+    // const [data, setData] = useState([]);
+    const [records, setRecords] = useState([]);
     const [filterFunction, setFilterFunction] = useState({
         fn: (items) => {
             return items;
         }
     });
+
+    const getRecords = async () => {
+        const api = "http://localhost:8080/directory/outlets";
+        const response = await fetch(api, {
+            mode: "cors",
+            method: "GET",
+            headers: {
+                "Access-Control-Allow-Origin": "http://localhost:8080"
+              }
+        });
+        const getResponse = await response.json();
+        console.log(getResponse);
+        setRecords(getResponse);
+        
+    };
+
+    useEffect(() => {
+        getRecords();
+    }, []);
+
 
     const {
         TblContainer,
@@ -61,13 +72,6 @@ export default function Directory() {
         TblPagination,
         recordsAfterPagingAndSorting
     } = useTable(records, headCells, filterFunction);
-
-    useEffect(() => {
-        getAllOutlets()
-        .then((res) => {
-            console.log(res);
-        })
-    }, []);
 
     return (
         <ContentWrapper>
@@ -99,12 +103,31 @@ export default function Directory() {
                 <TblContainer>
                     <TblHead/>
                     <TableBody>
-                        {/* {recordsAfterPagingAndSorting().map((item) => (
+                        {recordsAfterPagingAndSorting().map((item) => (
                             <TableRow key={item.outletid}>
-                                
+                                <TableCell>{item.institutionname}</TableCell>
+                                <TableCell>{item.outletname}</TableCell>
+                                <TableCell>{item.unitnumber}</TableCell>
+                                <TableCell>{item.tenantname}</TableCell>
+                                <TableCell>{item.email}</TableCell>
+                                <TableCell>{item.tenancystart}</TableCell>
+                                <TableCell>{item.tenancyend}</TableCell>
+                                <TableCell>
+                                    <Controls.ActionButton
+                                        color="primary"
+                                        onClick={null}>
+                                            <EditOutlined fontSize="small"/>
+                                    </Controls.ActionButton>
+                                    <Controls.ActionButton
+                                        color="secondary"
+                                        onClick={null}>
+                                            <Close fontSize="small"/>
+                                    </Controls.ActionButton>
+                                </TableCell>
                             </TableRow>
-                        ))} */}
+                        ))}
                     </TableBody>
+                    <TblPagination/>
                 </TblContainer>
             </Paper>
         </ContentWrapper>
