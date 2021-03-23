@@ -15,9 +15,9 @@ function App() {
   const { token, setToken } = useToken();
   // Login page rendered each time there is not a stored user token
   // display <Login /> when token==false, pass in setToken function to Login component
-  // if (!token) {
-  //   return <Login setToken={setToken} />;
-  // }
+  if (!token) {
+    return <Login setToken={setToken} />;
+  }
   return (
     <>
       <ThemeProvider theme={currentTheme}>
@@ -37,9 +37,9 @@ function App() {
               <Route path="/dashboard">
                 <Dashboard />
               </Route>
-              <Route path="/">
+              {/* <Route path="/">
                 <Login />
-              </Route>
+              </Route> */}
             </Switch>
           </div>
         </Router>
