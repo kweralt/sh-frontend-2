@@ -24,9 +24,10 @@ import {
   InputAdornment,
 } from "@material-ui/core";
 import useTable from "../components/useTable";
+import matchSorter from "match-sorter";
+import _ from "underscore";
 
 const headCells = [
-    // { id: "outletId", label: "Outlet Id"},
     { id: "institution", label: "Institution"},
     { id: "outletName", label: "Outlet Name"},
     { id: "unitNumber", label: "Unit Number"},
@@ -38,13 +39,13 @@ const headCells = [
 ];
 
 export default function Directory() {
-    // const [data, setData] = useState([]);
     const [records, setRecords] = useState([]);
     const [filterFunction, setFilterFunction] = useState({
         fn: (items) => {
             return items;
         }
     });
+
 
     const getRecords = async () => {
         const api = "http://localhost:8080/directory/outlets";
@@ -61,6 +62,7 @@ export default function Directory() {
         
     };
 
+
     useEffect(() => {
         getRecords();
     }, []);
@@ -73,6 +75,22 @@ export default function Directory() {
         recordsAfterPagingAndSorting
     } = useTable(records, headCells, filterFunction);
 
+
+    const handleSearch = (e) => {
+        let target = e.target;
+        setFilterFunction({
+            fn: (items) => {
+                if (target.value === "") return items;
+                else {
+                    return items.filter((x) => 
+                        x.outletname.toLowerCase().includes(target.value.toLowerCase())
+                    );
+                }
+            }
+        });
+    };
+
+
     return (
         <ContentWrapper>
             <PageHeader
@@ -83,7 +101,7 @@ export default function Directory() {
             <Paper>
                 <Toolbar>
                     <Controls.Input
-                        label="Filter by..."
+                        label="Filter by outlet name"
                         InputProps={{
                             startAdornment: (
                                 <InputAdornment position="start">
@@ -91,7 +109,7 @@ export default function Directory() {
                                 </InputAdornment>
                             )
                         }}
-                        onChange={null} // TODO: Please add something here
+                        onChange={handleSearch}
                     />
                     <Controls.Button
                         text="Add outlet"
