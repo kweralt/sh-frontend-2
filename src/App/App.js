@@ -5,6 +5,7 @@ import { useTheme } from "../theme";
 import Reports from "../pages/Reports";
 import Tenants from "../pages/Tenants";
 import Dashboard from "../pages/Dashboard";
+import Directory from "../pages/Directory";
 // import Home from "../pages/Home";
 import Login from "../pages/Login";
 import useToken from "./useToken";
@@ -36,6 +37,9 @@ function App() {
               </Route>
               <Route path="/dashboard">
                 <Dashboard />
+              </Route>
+              <Route path="/directory">
+                <Directory/>
               </Route>
               {/* <Route path="/">
                 <Login />
