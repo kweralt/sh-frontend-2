@@ -24,6 +24,7 @@ import {
   InputAdornment,
 } from "@material-ui/core";
 import useTable from "../components/useTable";
+import OutletForm from "../components/OutletForm";
 import matchSorter from "match-sorter";
 import _ from "underscore";
 
@@ -40,10 +41,22 @@ const headCells = [
 
 export default function Directory() {
     const [records, setRecords] = useState([]);
+    const [recordForEdit, setRecordForEdit] = useState(null);
     const [filterFunction, setFilterFunction] = useState({
         fn: (items) => {
             return items;
         }
+    });
+    const [openPopUp, setOpenPopUp] = useState(false);
+    const [notify, setNotify] = useState({
+        isOpen: false,
+        message: "",
+        type: ""
+    });
+    const [confirmDialog, setConfirmDialog] = useState({
+        isOpen: false,
+        title: "",
+        subTitle: ""
     });
 
 
@@ -91,6 +104,30 @@ export default function Directory() {
     };
 
 
+    const addOrEdit = (outlet,  resetForm) => {
+        console.log(outlet.outletid);
+        if (outlet.outletid === 0) {
+            console.log("Add new outlet"); // TODO: Connect with /directory/outlets/add
+        } else {
+            resetForm();
+            setRecordForEdit(null);
+            setOpenPopUp(false);
+            // useEffect();
+            setNotify({
+                isOpen: true,
+                message: "Submitted successfully",
+                type: "success"
+            });
+        }
+    };
+    
+    
+    const openInPopUp = (item) => {
+        setRecordForEdit(item);
+        setOpenPopUp(true);
+      };
+
+
     return (
         <ContentWrapper>
             <PageHeader
@@ -133,12 +170,23 @@ export default function Directory() {
                                 <TableCell>
                                     <Controls.ActionButton
                                         color="primary"
-                                        onClick={null}>
+                                        onClick={() => {
+                                            openInPopUp(item);
+                                        }}>
                                             <EditOutlined fontSize="small"/>
                                     </Controls.ActionButton>
                                     <Controls.ActionButton
                                         color="secondary"
-                                        onClick={null}>
+                                        onClick={() => {
+                                            setConfirmDialog({
+                                                isOpen: true,
+                                                title: "Are you sure you want to delete this record?",
+                                                subTitle: "You can't undo this operation",
+                                                onConfirm: () => {
+                                                    console.log("Record deleted");
+                                                }
+                                            });
+                                        }}>
                                             <Close fontSize="small"/>
                                     </Controls.ActionButton>
                                 </TableCell>
@@ -148,6 +196,21 @@ export default function Directory() {
                     <TblPagination/>
                 </TblContainer>
             </Paper>
+            <Popup
+                openPopup={openPopUp}
+                setOpenPopup={setOpenPopUp}
+                title={"Retail Outlet Form"}
+            >
+                <OutletForm recordForEdit={null} addOrEdit={addOrEdit}/>
+            </Popup>
+            <Notification
+                notify={notify} 
+                setNotify={setNotify} 
+            />
+            <ConfirmDialog
+                confirmDialog={confirmDialog}
+                setConfirmDialog={setConfirmDialog}
+            />
         </ContentWrapper>
     );
 }

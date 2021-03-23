@@ -67,8 +67,8 @@ export default function Tenants() {
   });
 
   // debug
-  console.log(tenantServices.getAllTenants());
-  console.log(tenantServices.getInstitutions());
+  // console.log(tenantServices.getAllTenants());
+  // console.log(tenantServices.getInstitutions());
 
   const {
     TblContainer,
