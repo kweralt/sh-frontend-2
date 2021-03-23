@@ -23,7 +23,18 @@ import {
   Toolbar,
   InputAdornment,
 } from "@material-ui/core";
+import useTable from "../components/useTable";
 
+const headCells = [
+    // { id: "outletId", label: "Outlet Id"},
+    { id: "institution", label: "Institution"},
+    { id: "outletName", label: "Outlet Name"},
+    { id: "unitNumber", label: "Unit Number"},
+    { id: "tenantName", label: "Tenant Name"},
+    { id: "tenantEmail", label: "Tenant Email"},
+    { id: "tenancyStart", label: "Tenancy Start"},
+    { id: "tenancyEnd", label: "Tenancy End"}
+];
 
 const getAllOutlets =  async () => {
     const response = await fetch("http://localhost:8080/directory/outlets", {
@@ -37,7 +48,19 @@ const getAllOutlets =  async () => {
 }
 
 export default function Directory() {
-    // const [data, setData] = useState(null);
+    const [records, setRecords] = useState(getAllOutlets());
+    const [filterFunction, setFilterFunction] = useState({
+        fn: (items) => {
+            return items;
+        }
+    });
+
+    const {
+        TblContainer,
+        TblHead,
+        TblPagination,
+        recordsAfterPagingAndSorting
+    } = useTable(records, headCells, filterFunction);
 
     useEffect(() => {
         getAllOutlets()
@@ -73,6 +96,16 @@ export default function Directory() {
                         onClick={null}
                     />
                 </Toolbar>
+                <TblContainer>
+                    <TblHead/>
+                    <TableBody>
+                        {/* {recordsAfterPagingAndSorting().map((item) => (
+                            <TableRow key={item.outletid}>
+                                
+                            </TableRow>
+                        ))} */}
+                    </TableBody>
+                </TblContainer>
             </Paper>
         </ContentWrapper>
     );
