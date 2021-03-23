@@ -39,8 +39,9 @@ const useStyles = makeStyles((theme) => ({
 const headCells = [
   { id: "fullName", label: "Tenant Name" },
   { id: "email", label: "Email Address" },
-  { id: "mobile", label: "Phone Number" },
-  { id: "department", label: "Department" },
+  { id: "institution", label: "Institution" },
+  // { id: "mobile", label: "Phone Number" },
+  // { id: "department", label: "Department" },
   { id: "actions", label: "Actions", disableSorting: true },
 ];
 
@@ -64,6 +65,10 @@ export default function Tenants() {
     title: "",
     subTitle: "",
   });
+
+  // debug
+  console.log(tenantServices.getAllTenants());
+  console.log(tenantServices.getInstitutions());
 
   const {
     TblContainer,
@@ -153,11 +158,12 @@ export default function Tenants() {
             <TblHead />
             <TableBody>
               {recordsAfterPagingAndSorting().map((item) => (
-                <TableRow key={item.id}>
-                  <TableCell>{item.fullName}</TableCell>
-                  <TableCell>{item.email}</TableCell>
-                  <TableCell>{item.mobile}</TableCell>
-                  <TableCell>{item.department}</TableCell>
+                <TableRow key={item.UserId}>
+                  <TableCell>{item.UserName}</TableCell>
+                  <TableCell>{item.Email}</TableCell>
+                  <TableCell>{item.InstitutionName}</TableCell>
+                  {/* <TableCell>{item.mobile}</TableCell>
+                  <TableCell>{item.department}</TableCell> */}
                   <TableCell>
                     <Controls.ActionButton
                       color="primary"

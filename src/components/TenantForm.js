@@ -106,22 +106,21 @@ export default function TenantForm(props) {
           />
         </Grid>
         <Grid item xs={6}>
-          <Controls.RadioGroup
+          {/* <Controls.RadioGroup
             name="gender"
             label="Gender"
             value={values.gender}
             onChange={handleInputChange}
             items={genderItems}
-          />
-          {/* fetch list of institutions here */}
-          <Controls.Select
+          /> */}
+          {/* <Controls.Select
             name="departmentId"
             label="Department"
             value={values.departmentId}
             onChange={handleInputChange}
             error={errors.departmentId}
-            options={tenantServices.getDepartmentCollection()}
-          />
+            options={tenantServices.getInstitutions()}
+          /> */}
           <Controls.DatePicker
             name="hireDate"
             label="Hire Date"
