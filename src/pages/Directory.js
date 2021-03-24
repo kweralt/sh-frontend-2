@@ -14,7 +14,6 @@ import Notification from "../components/Notification";
 import ConfirmDialog from "../components/ConfirmDialog";
 import ContentWrapper from "../components/ContentWrapper";
 import PageHeader from "../components/PageHeader";
-import directoryServices from "../services/directoryServices";
 import {
   Paper,
   makeStyles,
@@ -71,7 +70,7 @@ export default function Directory() {
               }
         });
         const getResponse = await response.json();
-        console.log(getResponse);
+        // console.log(getResponse);
         setRecords(getResponse);
         
     };
@@ -105,15 +104,15 @@ export default function Directory() {
     };
 
 
-    const addOrEdit = (outlet,  resetForm) => {
-        console.log(outlet.outletid);
+    const addOrEdit = (outlet, resetForm) => {
+        // console.log(outlet.outletid);
         if (outlet.outletid === 0) {
             console.log("Add new outlet"); // TODO: Connect with /directory/outlets/add
         } else {
             resetForm();
             setRecordForEdit(null);
             setOpenPopUp(false);
-            // setRecords(records);
+            getRecords();
             setNotify({
                 isOpen: true,
                 message: "Submitted successfully",

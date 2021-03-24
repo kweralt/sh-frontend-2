@@ -1,16 +1,17 @@
-export function getAllOutlets() {
-    return fetch("http://localhost:8080/users/institutions", {
+import { useEffect, useState } from "react";
+import createUrl from "../requests/requests";
+
+export async function addOutlet(values) {
+    console.log(values);
+
+    const url = createUrl("/directory/outlets/add");
+    return await fetch(url, {
         mode: "cors",
-        method: "GET",
+        method: "PUT",
         headers: {
-            "Access-Control-Allow-Origin": "http://localhost:8080"
-          }
-    })
-        .then((response) => response.json())
-        .then((data) => {
-            console.log("Success", data);
-        })
-        .catch((error) => {
-            console.error("Error", error);
-        })
+            "Access-Control-Allow-Origin": "http://localhost:8080",
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(values)
+    }).then((response) => response.json());
 }

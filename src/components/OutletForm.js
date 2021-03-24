@@ -2,19 +2,19 @@ import { useForm, Form } from "../components/useForm";
 import { Grid } from "@material-ui/core";
 import Controls from "./controls/Controls";
 import { useEffect } from "react";
+import * as directoryServices from "../services/directoryServices";
 
 const initialFormValues = {
     institutionname: "",
     outletname: "",
     email: "",
+    unitnumber: "",
     tenancystart: new Date(),
     tenancyend: new Date()
 };
 
 export default function OutletForm(props) {
     const { addOrEdit, recordForEdit } = props;
-
-    console.log(recordForEdit);
 
     const validInputs = (fieldValues = values) => {
         let temp = {...errors};
@@ -43,10 +43,17 @@ export default function OutletForm(props) {
         resetForm
     } = useForm(initialFormValues, true, validInputs);
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         if (validInputs()) {
-            console.log("Valid form");
+            
+            if ('outletid' in values) {
+                console.log("Update outlet");
+            } else {
+                console.log("Add new outlet");
+                let result = await directoryServices.addOutlet(values);
+                console.log(result);
+            }
             addOrEdit(values, resetForm);
         }
     };
@@ -78,14 +85,21 @@ export default function OutletForm(props) {
                         error={errors.outletname}
                     />
                     <Controls.Input
+                        name="unitnumber"
+                        label="Unit Number"
+                        value={values.unitnumber}
+                        onChange={handleInputChange}
+                        error={errors.unitnumber}
+                    />
+                </Grid>
+                <Grid item xs={6}>
+                    <Controls.Input
                         name="email"
                         label="Tenant Email"
                         value={values.email}
                         onChange={handleInputChange}
                         error={errors.email}
                     />
-                </Grid>
-                <Grid item xs={6}>
                     <Controls.DatePicker
                         name="tenancystart"
                         label="Tenancy Start"
@@ -98,6 +112,8 @@ export default function OutletForm(props) {
                         value={values.tenancyend}
                         onChange={handleInputChange}
                     />
+                </Grid>
+                <Grid item lg={12}>
                     <div>
                         <Controls.Button type="submit" text="Submit" />
                         <Controls.Button text="Reset" color="default" onClick={resetForm} />
