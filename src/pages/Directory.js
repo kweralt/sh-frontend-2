@@ -14,6 +14,7 @@ import Notification from "../components/Notification";
 import ConfirmDialog from "../components/ConfirmDialog";
 import ContentWrapper from "../components/ContentWrapper";
 import PageHeader from "../components/PageHeader";
+import directoryServices from "../services/directoryServices";
 import {
   Paper,
   makeStyles,
@@ -27,12 +28,12 @@ import useTable from "../components/useTable";
 import OutletForm from "../components/OutletForm";
 import matchSorter from "match-sorter";
 import _ from "underscore";
+import {useAsync} from 'react-hook-async';
 
 const headCells = [
     { id: "institution", label: "Institution"},
     { id: "outletName", label: "Outlet Name"},
     { id: "unitNumber", label: "Unit Number"},
-    { id: "tenantName", label: "Tenant Name"},
     { id: "tenantEmail", label: "Tenant Email"},
     { id: "tenancyStart", label: "Tenancy Start"},
     { id: "tenancyEnd", label: "Tenancy End"},
@@ -112,7 +113,7 @@ export default function Directory() {
             resetForm();
             setRecordForEdit(null);
             setOpenPopUp(false);
-            // useEffect();
+            // setRecords(records);
             setNotify({
                 isOpen: true,
                 message: "Submitted successfully",
@@ -152,7 +153,10 @@ export default function Directory() {
                         text="Add outlet"
                         variant="outlined"
                         startIcon={<Add/>}
-                        onClick={null}
+                        onClick={() => {
+                            setOpenPopUp(true);
+                            setRecordForEdit(null);
+                        }}
                     />
                 </Toolbar>
                 <TblContainer>
@@ -163,7 +167,6 @@ export default function Directory() {
                                 <TableCell>{item.institutionname}</TableCell>
                                 <TableCell>{item.outletname}</TableCell>
                                 <TableCell>{item.unitnumber}</TableCell>
-                                <TableCell>{item.tenantname}</TableCell>
                                 <TableCell>{item.email}</TableCell>
                                 <TableCell>{item.tenancystart}</TableCell>
                                 <TableCell>{item.tenancyend}</TableCell>
@@ -172,6 +175,7 @@ export default function Directory() {
                                         color="primary"
                                         onClick={() => {
                                             openInPopUp(item);
+                                            setRecordForEdit(item);
                                         }}>
                                             <EditOutlined fontSize="small"/>
                                     </Controls.ActionButton>
@@ -201,7 +205,7 @@ export default function Directory() {
                 setOpenPopup={setOpenPopUp}
                 title={"Retail Outlet Form"}
             >
-                <OutletForm recordForEdit={null} addOrEdit={addOrEdit}/>
+                <OutletForm recordForEdit={recordForEdit} addOrEdit={addOrEdit}/>
             </Popup>
             <Notification
                 notify={notify} 

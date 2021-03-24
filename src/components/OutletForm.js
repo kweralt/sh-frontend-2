@@ -4,25 +4,27 @@ import Controls from "./controls/Controls";
 import { useEffect } from "react";
 
 const initialFormValues = {
-    institution: "",
-    outletName: "",
-    tenantEmail: "",
-    tenancyStart: new Date(),
-    tenancyEnd: new Date()
+    institutionname: "",
+    outletname: "",
+    email: "",
+    tenancystart: new Date(),
+    tenancyend: new Date()
 };
 
 export default function OutletForm(props) {
     const { addOrEdit, recordForEdit } = props;
 
+    console.log(recordForEdit);
+
     const validInputs = (fieldValues = values) => {
         let temp = {...errors};
 
         // TODO: Finish input validation
-        if ("institution" in fieldValues) {
-            temp.institution = fieldValues.institution ? "" : "This field is required";
+        if ("institutionname" in fieldValues) {
+            temp.institutionname = fieldValues.institutionname ? "" : "This field is required";
         }
-        if ("outletName" in fieldValues) {
-            temp.outletName = fieldValues.outletName ? "" : "This field is required";
+        if ("outletname" in fieldValues) {
+            temp.outletname = fieldValues.outletname ? "" : "This field is required";
         }
 
         setErrors({
@@ -49,43 +51,51 @@ export default function OutletForm(props) {
         }
     };
 
+    useEffect(() => {
+        if (recordForEdit != null) {
+            setValues({
+                ...recordForEdit,
+            });
+        }
+    }, [recordForEdit]);
+
     return (
         <Form onSubmit={handleSubmit}>
             <Grid container>
                 <Grid item xs={6}>
                     <Controls.Input
-                        name="institution"
-                        label="Institution"
-                        value={values.institution}
+                        name="institutionname"
+                        label="institutionname"
+                        value={values.institutionname}
                         onChange={handleInputChange}
-                        error={errors.institution}
+                        error={errors.institutionname}
                     />
                     <Controls.Input
-                        name="outletName"
+                        name="outletname"
                         label="Outlet Name"
-                        value={values.outletName}
+                        value={values.outletname}
                         onChange={handleInputChange}
-                        error={errors.outletName}
+                        error={errors.outletname}
                     />
                     <Controls.Input
-                        name="tenantEmail"
+                        name="email"
                         label="Tenant Email"
-                        value={values.tenantEmail}
+                        value={values.email}
                         onChange={handleInputChange}
-                        error={errors.tenantEmail}
+                        error={errors.email}
                     />
                 </Grid>
                 <Grid item xs={6}>
                     <Controls.DatePicker
-                        name="tenancyStart"
+                        name="tenancystart"
                         label="Tenancy Start"
-                        value={values.tenancyStart}
+                        value={values.tenancystart}
                         onChange={handleInputChange}
                     />
                     <Controls.DatePicker
-                        name="tenancyEnd"
+                        name="tenancyend"
                         label="Tenancy End"
-                        value={values.tenancyEnd}
+                        value={values.tenancyend}
                         onChange={handleInputChange}
                     />
                     <div>
