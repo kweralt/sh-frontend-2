@@ -1,18 +1,8 @@
-import {
-  makeStyles,
-  Grid,
-  Avatar,
-  Typography,
-  Button,
-  FormControlLabel,
-  Checkbox,
-  TextField,
-  Link,
-} from "@material-ui/core";
+import { makeStyles, Grid, Avatar, Typography } from "@material-ui/core";
 import { LockOutlined } from "@material-ui/icons";
-// import ContentWrapper from "../components/ContentWrapper";
 import PropTypes from "prop-types";
-import { useState } from "react";
+import Controls from "../components/controls/Controls";
+import { useForm, Form } from "../components/useForm";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -36,6 +26,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const initialFValues = {
+  email: "",
+  password: "",
+};
+
 // take credentials as arg, fetch() with POST method, return format {token: 'test123'}
 async function loginUser(credentials) {
   return fetch("http://localhost:8080/auth", {
@@ -51,16 +46,38 @@ async function loginUser(credentials) {
 
 export default function Login({ setToken }) {
   const classes = useStyles();
-  const [email, setEmail] = useState();
-  const [password, setPassword] = useState();
+
+  const validate = (fieldValues = values) => {
+    // only update based on properties below
+    let temp = { ...errors };
+    if ("email" in fieldValues)
+      temp.email = /$^|.+@.+..+/.test(fieldValues.email)
+        ? ""
+        : "Email is not valid."; // regex for email
+    if ("password" in fieldValues)
+      temp.password =
+        fieldValues.password.length > 2 ? "" : "Minimum 3 characters required.";
+    setErrors({
+      ...temp,
+    });
+
+    // every() returns true if all elements pass test
+    return Object.values(temp).every((x) => x === "");
+  };
+
+  const { values, setValues, errors, setErrors, handleInputChange } = useForm(
+    initialFValues,
+    true,
+    validate
+  );
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const token = await loginUser({
-      email,
-      password,
-    });
-    setToken(token);
+    if (validate()) {
+      console.log("testing");
+      const token = await loginUser(values);
+      setToken(token);
+    }
   };
 
   return (
@@ -73,8 +90,8 @@ export default function Login({ setToken }) {
           Sign In
         </Typography>
       </Grid>
-      <form className={classes.form} noValidate onSubmit={handleSubmit}>
-        <TextField
+      <Form className={classes.form} onSubmit={handleSubmit}>
+        <Controls.Input
           type="text"
           variant="outlined"
           margin="normal"
@@ -85,9 +102,11 @@ export default function Login({ setToken }) {
           name="email"
           autoComplete="email"
           autoFocus
-          onChange={(e) => setEmail(e.target.value)}
+          value={values.email}
+          onChange={handleInputChange}
+          error={errors.email}
         />
-        <TextField
+        <Controls.Input
           type="password"
           variant="outlined"
           margin="normal"
@@ -98,25 +117,23 @@ export default function Login({ setToken }) {
           name="password"
           autoComplete="current-password"
           autoFocus
-          onChange={(e) => setPassword(e.target.value)}
+          values={values.password}
+          onChange={handleInputChange}
+          error={errors.password}
         />
         {/* <FormControlLabel
           control={<Checkbox value="remember" color="primary" />}
           label="Remember me"
         /> */}
-        <Button
-          fullWidth
-          variant="contained"
-          color="primary"
+        <Controls.Button
           className={classes.submit}
           type="submit"
-        >
-          Sign In
-        </Button>
+          text="Sign In"
+        />
         {/* <Link href="#" variant="body2">
           Forgot password?
         </Link> */}
-      </form>
+      </Form>
     </div>
   );
 }
