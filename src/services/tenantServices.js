@@ -1,15 +1,9 @@
-export async function getInstitutions() {
-  let response = await fetch("http://localhost:8080/users/institutions", {
-        mode: "cors",
-        method: "GET",
-        headers: {
-          "Access-Control-Allow-Origin": "http://localhost:8080"
-        }
-  });
-  let json = await response.json();
-  let institutions = json.institutions;
-  return institutions;
-}
+export const getDepartmentCollection = () => [
+  { id: "1", title: "Development" },
+  { id: "2", title: "Marketing" },
+  { id: "3", title: "Accounting" },
+  { id: "4", title: "HR" },
+];
 
 const KEYS = {
   tenants: "tenants",
@@ -24,20 +18,16 @@ export function generateTenantId() {
   return id;
 }
 
-export async function getAllTenants() {
-  let response = await fetch("http://localhost:8080/users/tenants", {
-    mode: "cors",
-    method: "GET",
-    headers: {
-      "Access-Control-Allow-Origin": "http://localhost:8080"
-    }
-  });
-  let json = await response.json();
-  let tenants = json.tenants;
-
-  // console.log(tenants);
-
-  return tenants;
+export function getAllTenants() {
+  if (localStorage.getItem(KEYS.tenants) == null)
+    localStorage.setItem(KEYS.tenants, JSON.stringify([]));
+  let tenants = JSON.parse(localStorage.getItem(KEYS.tenants));
+  // map departmentId to department title
+  let departments = getDepartmentCollection();
+  return tenants.map((x) => ({
+    ...x,
+    department: departments[x.departmentId - 1].title, //relationship is -1 to test
+  }));
 }
 
 // save into localStorage then convert to JSON
