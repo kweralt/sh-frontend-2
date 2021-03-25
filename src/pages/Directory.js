@@ -5,7 +5,6 @@ import {
   Add,
   Close,
   EditOutlined,
-  PeopleOutlineTwoTone,
   Map
 } from "@material-ui/icons";
 import Popup from "../components/Popup";
@@ -15,7 +14,6 @@ import ContentWrapper from "../components/ContentWrapper";
 import PageHeader from "../components/PageHeader";
 import {
   Paper,
-  makeStyles,
   TableBody,
   TableRow,
   TableCell,
@@ -25,7 +23,6 @@ import {
 import useTable from "../components/useTable";
 import OutletForm from "../components/OutletForm";
 import * as directoryServices from "../services/directoryServices";
-import _ from "underscore";
 
 const headCells = [
     { id: "institution", label: "Institution"},
