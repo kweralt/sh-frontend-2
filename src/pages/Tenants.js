@@ -9,7 +9,7 @@ import {
   Toolbar,
   InputAdornment,
 } from "@material-ui/core";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import useTable from "../components/useTable";
 import * as tenantServices from "../services/tenantServices";
 import Controls from "../components/controls/Controls";
@@ -39,16 +39,13 @@ const useStyles = makeStyles((theme) => ({
 const headCells = [
   { id: "fullName", label: "Tenant Name" },
   { id: "email", label: "Email Address" },
-  { id: "institution", label: "Institution" },
-  // { id: "mobile", label: "Phone Number" },
-  // { id: "department", label: "Department" },
   { id: "actions", label: "Actions", disableSorting: true },
 ];
 
 export default function Tenants() {
   const classes = useStyles();
   const [recordForEdit, setRecordForEdit] = useState(null);
-  const [records, setRecords] = useState(tenantServices.getAllTenants());
+  const [records, setRecords] = useState([]);
   const [filterFn, setFilterFn] = useState({
     fn: (items) => {
       return items;
@@ -66,9 +63,15 @@ export default function Tenants() {
     subTitle: "",
   });
 
-  // debug
-  // console.log(tenantServices.getAllTenants());
-  // console.log(tenantServices.getInstitutions());
+  const getRecords = async () => {
+    const data = await tenantServices.getTenants();
+    console.log(data);
+    setRecords(data.data);
+  }
+
+  useEffect(() => {
+    getRecords();
+  }, []);
 
   const {
     TblContainer,
@@ -91,12 +94,12 @@ export default function Tenants() {
   };
 
   const addOrEdit = (tenant, resetForm) => {
-    if (tenant.id === 0) tenantServices.insertTenant(tenant);
-    else tenantServices.updateTenant(tenant);
+    // if (tenant.id === 0) tenantServices.insertTenant(tenant);
+    // else tenantServices.updateTenant(tenant);
     resetForm();
     setRecordForEdit(null);
     setOpenPopup(false);
-    setRecords(tenantServices.getAllTenants());
+    // setRecords(tenantServices.getAllTenants());
     setNotify({
       isOpen: true,
       message: "Submitted Successfully",
@@ -114,8 +117,8 @@ export default function Tenants() {
       ...confirmDialog,
       isOpen: false,
     });
-    tenantServices.deleteTenant(id);
-    setRecords(tenantServices.getAllTenants());
+    // tenantServices.deleteTenant(id);
+    // setRecords(tenantServices.getAllTenants());
     setNotify({
       isOpen: true,
       message: "Deleted Successfully",
@@ -161,9 +164,6 @@ export default function Tenants() {
                 <TableRow key={item.UserId}>
                   <TableCell>{item.UserName}</TableCell>
                   <TableCell>{item.Email}</TableCell>
-                  <TableCell>{item.InstitutionName}</TableCell>
-                  {/* <TableCell>{item.mobile}</TableCell>
-                  <TableCell>{item.department}</TableCell> */}
                   <TableCell>
                     <Controls.ActionButton
                       color="primary"

@@ -14,6 +14,7 @@ import ContentWrapper from "../components/ContentWrapper";
 import PageHeader from "../components/PageHeader";
 import {
   Paper,
+  makeStyles,
   TableBody,
   TableRow,
   TableCell,
@@ -23,6 +24,17 @@ import {
 import useTable from "../components/useTable";
 import OutletForm from "../components/OutletForm";
 import * as directoryServices from "../services/directoryServices";
+
+const useStyles = makeStyles((theme) => ({
+    root: {
+      width: "100%",
+      marginBottom: theme.spacing(2),
+    },
+    pageContent: {
+      margin: theme.spacing(5),
+      padding: theme.spacing(3),
+    },
+  }));
 
 const headCells = [
     { id: "institution", label: "Institution"},
@@ -35,6 +47,7 @@ const headCells = [
 ];
 
 export default function Directory() {
+    const classes = useStyles();
     const [records, setRecords] = useState([]);
     const [recordForEdit, setRecordForEdit] = useState(null);
     const [filterFunction, setFilterFunction] = useState({
@@ -129,90 +142,92 @@ export default function Directory() {
 
     return (
         <ContentWrapper>
-            <PageHeader
-                title="Directory of Retail Outlets"
-                subTitle=""
-                icon={<Map fontSize="large"/>}
-            />
-            <Paper>
-                <Toolbar>
-                    <Controls.Input
-                        label="Filter by outlet name"
-                        InputProps={{
-                            startAdornment: (
-                                <InputAdornment position="start">
-                                    <Search/>
-                                </InputAdornment>
-                            )
-                        }}
-                        onChange={handleSearch}
-                    />
-                    <Controls.Button
-                        text="Add outlet"
-                        variant="outlined"
-                        startIcon={<Add/>}
-                        onClick={() => {
-                            setOpenPopUp(true);
-                            setRecordForEdit(null);
-                        }}
-                    />
-                </Toolbar>
-                <TblContainer>
-                    <TblHead/>
-                    <TableBody>
-                        {recordsAfterPagingAndSorting().map((item) => (
-                            <TableRow key={item.outletid}>
-                                <TableCell>{item.institutionname}</TableCell>
-                                <TableCell>{item.outletname}</TableCell>
-                                <TableCell>{item.unitnumber}</TableCell>
-                                <TableCell>{item.email}</TableCell>
-                                <TableCell>{item.tenancystart}</TableCell>
-                                <TableCell>{item.tenancyend}</TableCell>
-                                <TableCell>
-                                    <Controls.ActionButton
-                                        color="primary"
-                                        onClick={() => {
-                                            openInPopUp(item);
-                                            setRecordForEdit(item);
-                                        }}>
-                                            <EditOutlined fontSize="small"/>
-                                    </Controls.ActionButton>
-                                    <Controls.ActionButton
-                                        color="secondary"
-                                        onClick={() => {
-                                            setConfirmDialog({
-                                                isOpen: true,
-                                                title: "Are you sure you want to delete this record?",
-                                                subTitle: "You can't undo this operation",
-                                                onConfirm: () => {
-                                                    handleDelete(item.outletid);
-                                                }
-                                            });
-                                        }}>
-                                            <Close fontSize="small"/>
-                                    </Controls.ActionButton>
-                                </TableCell>
-                            </TableRow>
-                        ))}
-                    </TableBody>
-                    <TblPagination/>
-                </TblContainer>
-            </Paper>
-            <Popup
-                openPopup={openPopUp}
-                setOpenPopup={setOpenPopUp}
-                title={"Retail Outlet Form"}
-            >
-                <OutletForm recordForEdit={recordForEdit} addOrEdit={addOrEdit}/>
-            </Popup>
-            <Notification
-                notify={notify} 
-                setNotify={setNotify} 
-            />
-            <ConfirmDialog
-                confirmDialog={confirmDialog}
-                setConfirmDialog={setConfirmDialog}
-            />
+            <div className={classes.root}>
+                <PageHeader
+                    title="Directory of Retail Outlets"
+                    subTitle=""
+                    icon={<Map fontSize="large"/>}
+                />
+                <Paper>
+                    <Toolbar>
+                        <Controls.Input
+                            label="Filter by outlet name"
+                            InputProps={{
+                                startAdornment: (
+                                    <InputAdornment position="start">
+                                        <Search/>
+                                    </InputAdornment>
+                                )
+                            }}
+                            onChange={handleSearch}
+                        />
+                        <Controls.Button
+                            text="Add outlet"
+                            variant="outlined"
+                            startIcon={<Add/>}
+                            onClick={() => {
+                                setOpenPopUp(true);
+                                setRecordForEdit(null);
+                            }}
+                        />
+                    </Toolbar>
+                    <TblContainer>
+                        <TblHead/>
+                        <TableBody>
+                            {recordsAfterPagingAndSorting().map((item) => (
+                                <TableRow key={item.outletid}>
+                                    <TableCell>{item.institutionname}</TableCell>
+                                    <TableCell>{item.outletname}</TableCell>
+                                    <TableCell>{item.unitnumber}</TableCell>
+                                    <TableCell>{item.email}</TableCell>
+                                    <TableCell>{item.tenancystart}</TableCell>
+                                    <TableCell>{item.tenancyend}</TableCell>
+                                    <TableCell>
+                                        <Controls.ActionButton
+                                            color="primary"
+                                            onClick={() => {
+                                                openInPopUp(item);
+                                                setRecordForEdit(item);
+                                            }}>
+                                                <EditOutlined fontSize="small"/>
+                                        </Controls.ActionButton>
+                                        <Controls.ActionButton
+                                            color="secondary"
+                                            onClick={() => {
+                                                setConfirmDialog({
+                                                    isOpen: true,
+                                                    title: "Are you sure you want to delete this record?",
+                                                    subTitle: "You can't undo this operation",
+                                                    onConfirm: () => {
+                                                        handleDelete(item.outletid);
+                                                    }
+                                                });
+                                            }}>
+                                                <Close fontSize="small"/>
+                                        </Controls.ActionButton>
+                                    </TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                        <TblPagination/>
+                    </TblContainer>
+                </Paper>
+                <Popup
+                    openPopup={openPopUp}
+                    setOpenPopup={setOpenPopUp}
+                    title={"Retail Outlet Form"}
+                >
+                    <OutletForm recordForEdit={recordForEdit} addOrEdit={addOrEdit}/>
+                </Popup>
+                <Notification
+                    notify={notify} 
+                    setNotify={setNotify} 
+                />
+                <ConfirmDialog
+                    confirmDialog={confirmDialog}
+                    setConfirmDialog={setConfirmDialog}
+                />
+            </div>
         </ContentWrapper>
     );
 }
