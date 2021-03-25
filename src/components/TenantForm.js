@@ -4,43 +4,28 @@ import Controls from "./controls/Controls";
 import * as tenantServices from "../services/tenantServices";
 import { useEffect } from "react";
 
-const genderItems = [
-  { id: "male", title: "Male" },
-  { id: "female", title: "Female" },
-  { id: "other", title: "Other" },
-];
-
 const initialFValues = {
-  id: 0,
-  fullName: "",
-  email: "",
-  mobile: "",
-  city: "",
-  gender: "male",
-  departmentId: "",
-  hireDate: new Date(),
-  isPermanent: false,
+  // id: 0,
+  UserName: "",
+  Email: "",
+  Password: ""
 };
 
 export default function TenantForm(props) {
   const { addOrEdit, recordForEdit } = props;
 
-  const validate = (fieldValues = values) => {
+  const validInputs = (fieldValues = values) => {
     // only update based on properties below
     let temp = { ...errors };
 
-    if ("fullName" in fieldValues)
-      temp.fullName = fieldValues.fullName ? "" : "This field is required.";
-    if ("email" in fieldValues)
-      temp.email = /$^|.+@.+..+/.test(fieldValues.email)
+    if ("UserName" in fieldValues)
+      temp.UserName = fieldValues.UserName ? "" : "This field is required.";
+    if ("Email" in fieldValues)
+      temp.Email = /$^|.+@.+..+/.test(fieldValues.Email) // TODO: Check for empty email input
         ? ""
-        : "Email is not valid."; // regex for email
-    if ("mobile" in fieldValues)
-      temp.mobile =
-        fieldValues.mobile.length > 7 ? "" : "Minimum 8 numbers required.";
-    if ("departmentId" in fieldValues)
-      temp.departmentId =
-        fieldValues.departmentId.length !== 0 ? "" : "This field is required.";
+        : "Email is not valid."; // regex for Email
+    if ("Password" in fieldValues && recordForEdit === null)
+      temp.Password = fieldValues.Password ? "" : "This field is required";
     setErrors({
       ...temp,
     });
@@ -56,12 +41,19 @@ export default function TenantForm(props) {
     setErrors,
     handleInputChange,
     resetForm,
-  } = useForm(initialFValues, true, validate);
+  } = useForm(initialFValues, true, validInputs);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (validate()) {
-      window.alert("FORM IS VALID");
+    if (validInputs()) {
+      if ('UserId' in values) {
+        console.log("Update user with id " + values.UserId);
+        await tenantServices.updateTenant(values);
+      } else {
+        console.log("Add new user");
+        let result = await tenantServices.addTenant(values);
+        console.log(result);
+      }
       addOrEdit(values, resetForm);
     }
   };
@@ -76,63 +68,27 @@ export default function TenantForm(props) {
   return (
     <Form onSubmit={handleSubmit}>
       <Grid container>
-        <Grid item xs={6}>
+        <Grid item xs={12}>
           <Controls.Input
-            name="fullName"
+            name="UserName"
             label="Full Name"
-            value={values.fullName}
+            value={values.UserName}
             onChange={handleInputChange}
-            error={errors.fullName}
+            error={errors.UserName}
           />
           <Controls.Input
             label="Email"
-            name="email"
-            value={values.email}
+            name="Email"
+            value={values.Email}
             onChange={handleInputChange}
-            error={errors.email}
+            error={errors.Email}
           />
           <Controls.Input
-            label="Mobile"
-            name="mobile"
-            value={values.mobile}
+            label="Password (Optional)"
+            name="Password"
+            value={values.Password}
             onChange={handleInputChange}
-            error={errors.mobile}
-          />
-          <Controls.Input
-            label="City"
-            name="city"
-            value={values.city}
-            onChange={handleInputChange}
-          />
-        </Grid>
-        <Grid item xs={6}>
-          <Controls.RadioGroup
-            name="gender"
-            label="Gender"
-            value={values.gender}
-            onChange={handleInputChange}
-            items={genderItems}
-          />
-          {/* fetch list of institutions here */}
-          <Controls.Select
-            name="departmentId"
-            label="Department"
-            value={values.departmentId}
-            onChange={handleInputChange}
-            error={errors.departmentId}
-            options={tenantServices.getDepartmentCollection()}
-          />
-          <Controls.DatePicker
-            name="hireDate"
-            label="Hire Date"
-            value={values.hireDate}
-            onChange={handleInputChange}
-          />
-          <Controls.Checkbox
-            name="isPermanent"
-            label="Permanent Tenant"
-            value={values.isPermanent}
-            onChange={handleInputChange}
+            error={errors.Password}
           />
           <div>
             <Controls.Button type="submit" text="Submit" />

@@ -84,6 +84,7 @@ function Header(props) {
           { text: "reports", icon: "assignment" },
           { text: "tenants", icon: "person" },
           { text: "dashboard", icon: "dashboard" },
+          { text: "directory", icon: "map" }
         ].map(({ text, icon }, index) => (
           <ListItem
             component={RouterLink}

@@ -9,7 +9,7 @@ import {
   Toolbar,
   InputAdornment,
 } from "@material-ui/core";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import useTable from "../components/useTable";
 import * as tenantServices from "../services/tenantServices";
 import Controls from "../components/controls/Controls";
@@ -39,15 +39,13 @@ const useStyles = makeStyles((theme) => ({
 const headCells = [
   { id: "fullName", label: "Tenant Name" },
   { id: "email", label: "Email Address" },
-  { id: "mobile", label: "Phone Number" },
-  { id: "department", label: "Department" },
   { id: "actions", label: "Actions", disableSorting: true },
 ];
 
 export default function Tenants() {
   const classes = useStyles();
   const [recordForEdit, setRecordForEdit] = useState(null);
-  const [records, setRecords] = useState(tenantServices.getAllTenants());
+  const [records, setRecords] = useState([]);
   const [filterFn, setFilterFn] = useState({
     fn: (items) => {
       return items;
@@ -65,6 +63,16 @@ export default function Tenants() {
     subTitle: "",
   });
 
+  const getRecords = async () => {
+    const data = await tenantServices.getTenants();
+    // console.log(data);
+    setRecords(data.data);
+  }
+
+  useEffect(() => {
+    getRecords();
+  }, []);
+
   const {
     TblContainer,
     TblHead,
@@ -79,19 +87,17 @@ export default function Tenants() {
         if (target.value === "") return items;
         else
           return items.filter((x) =>
-            x.fullName.toLowerCase().includes(target.value)
+            x.UserName.toLowerCase().includes(target.value.toLowerCase())
           );
       },
     });
   };
 
   const addOrEdit = (tenant, resetForm) => {
-    if (tenant.id === 0) tenantServices.insertTenant(tenant);
-    else tenantServices.updateTenant(tenant);
     resetForm();
     setRecordForEdit(null);
     setOpenPopup(false);
-    setRecords(tenantServices.getAllTenants());
+    getRecords();
     setNotify({
       isOpen: true,
       message: "Submitted Successfully",
@@ -110,7 +116,7 @@ export default function Tenants() {
       isOpen: false,
     });
     tenantServices.deleteTenant(id);
-    setRecords(tenantServices.getAllTenants());
+    getRecords();
     setNotify({
       isOpen: true,
       message: "Deleted Successfully",
@@ -153,11 +159,9 @@ export default function Tenants() {
             <TblHead />
             <TableBody>
               {recordsAfterPagingAndSorting().map((item) => (
-                <TableRow key={item.id}>
-                  <TableCell>{item.fullName}</TableCell>
-                  <TableCell>{item.email}</TableCell>
-                  <TableCell>{item.mobile}</TableCell>
-                  <TableCell>{item.department}</TableCell>
+                <TableRow key={item.UserId}>
+                  <TableCell>{item.UserName}</TableCell>
+                  <TableCell>{item.Email}</TableCell>
                   <TableCell>
                     <Controls.ActionButton
                       color="primary"
@@ -175,7 +179,7 @@ export default function Tenants() {
                           title: "Do you really want to delete this record",
                           subTitle: "You can't undo this operation",
                           onConfirm: () => {
-                            onDelete(item.id);
+                            onDelete(item.UserId);
                           },
                         });
                       }}
