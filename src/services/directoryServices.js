@@ -27,6 +27,19 @@ export async function addOutlet(values) {
     }).then((response) => response.json());
 }
 
+export async function updateOutlet(values) {
+    const url = createUrl("/directory/outlets/update");
+    return await fetch(url, {
+        mode: "cors",
+        method: "POST",
+        headers: {
+            "Access-Control-Allow-Origin": "http://localhost:8080",
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(values)
+    }).then((response) => response.json());
+}
+
 export async function deleteOutlet(values) {
     console.log(values);
     const url = createUrl("/directory/outlets/delete");

@@ -46,9 +46,10 @@ export default function OutletForm(props) {
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (validInputs()) {
-            
             if ('outletid' in values) {
                 console.log("Update outlet");
+                let result = await directoryServices.updateOutlet(values);
+                console.log(result);
             } else {
                 console.log("Add new outlet");
                 let result = await directoryServices.addOutlet(values);
