@@ -1,4 +1,3 @@
-// import { hi } from "date-fns/locale";
 import React, { useEffect, useState } from "react";
 import Controls from "../components/controls/Controls";
 import {
@@ -27,7 +26,6 @@ import useTable from "../components/useTable";
 import OutletForm from "../components/OutletForm";
 import * as directoryServices from "../services/directoryServices";
 import _ from "underscore";
-import {useAsync} from 'react-hook-async';
 
 const headCells = [
     { id: "institution", label: "Institution"},
@@ -61,17 +59,8 @@ export default function Directory() {
 
 
     const getRecords = async () => {
-        const api = "http://localhost:8080/directory/outlets";
-        const response = await fetch(api, {
-            mode: "cors",
-            method: "GET",
-            headers: {
-                "Access-Control-Allow-Origin": "http://localhost:8080"
-              }
-        });
-        const getResponse = await response.json();
-        // console.log(getResponse);
-        setRecords(getResponse);
+        const data = await directoryServices.getOutlets();
+        setRecords(data);
         
     };
 
@@ -105,7 +94,6 @@ export default function Directory() {
 
 
     const addOrEdit = (outlet, resetForm) => {
-        // console.log(outlet.outletid);
         if (outlet.outletid === 0) {
             console.log("Add new outlet"); // TODO: Connect with /directory/outlets/add
         } else {
@@ -127,7 +115,6 @@ export default function Directory() {
             isOpen: false,
           });
         directoryServices.deleteOutlet(outletId);
-        // console.log("Record deleted");
         getRecords();
         setNotify({
             isOpen: true,

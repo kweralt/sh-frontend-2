@@ -1,9 +1,16 @@
 import { useEffect, useState } from "react";
 import createUrl from "../requests/requests";
 
-// export async function getOutlets() {
-//     const url = createUrl("/directory/outlets");
-// }
+export async function getOutlets() {
+    const url = createUrl("/directory/outlets");
+    return await fetch(url, {
+        mode: "cors",
+        method: "GET",
+        headers: {
+            "Access-Control-Allow-Origin": "http://localhost:8080"
+          }
+    }).then((response) => response.json());
+}
 
 export async function addOutlet(values) {
     // console.log(values);
