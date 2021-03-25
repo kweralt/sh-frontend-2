@@ -69,10 +69,9 @@ export default function OutletForm(props) {
     return (
         <Form onSubmit={handleSubmit}>
             <Grid container>
-                <Grid item xs={6}>
-                    <Controls.Input
+                <Controls.Input
                         name="institutionname"
-                        label="institutionname"
+                        label="Institution"
                         value={values.institutionname}
                         onChange={handleInputChange}
                         error={errors.institutionname}
@@ -91,8 +90,6 @@ export default function OutletForm(props) {
                         onChange={handleInputChange}
                         error={errors.unitnumber}
                     />
-                </Grid>
-                <Grid item xs={6}>
                     <Controls.Input
                         name="email"
                         label="Tenant Email"
@@ -112,7 +109,11 @@ export default function OutletForm(props) {
                         value={values.tenancyend}
                         onChange={handleInputChange}
                     />
+                {/* <Grid item xs={6}>
                 </Grid>
+                <Grid item xs={6}>
+
+                </Grid> */}
                 <Grid item lg={12}>
                     <div>
                         <Controls.Button type="submit" text="Submit" />

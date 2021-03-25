@@ -1,8 +1,12 @@
 import { useEffect, useState } from "react";
 import createUrl from "../requests/requests";
 
+// export async function getOutlets() {
+//     const url = createUrl("/directory/outlets");
+// }
+
 export async function addOutlet(values) {
-    console.log(values);
+    // console.log(values);
 
     const url = createUrl("/directory/outlets/add");
     return await fetch(url, {
@@ -14,4 +18,20 @@ export async function addOutlet(values) {
         },
         body: JSON.stringify(values)
     }).then((response) => response.json());
+}
+
+export async function deleteOutlet(values) {
+    console.log(values);
+    const url = createUrl("/directory/outlets/delete");
+    return await fetch(url, {
+        mode: "cors",
+        method: "DELETE",
+        headers: {
+            "Access-Control-Allow-Origin": "http://localhost:8080",
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            outletid: parseInt(values)
+        })
+    }).then((response) => (response.json()));
 }

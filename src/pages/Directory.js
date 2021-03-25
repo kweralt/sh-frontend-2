@@ -25,7 +25,7 @@ import {
 } from "@material-ui/core";
 import useTable from "../components/useTable";
 import OutletForm from "../components/OutletForm";
-import matchSorter from "match-sorter";
+import * as directoryServices from "../services/directoryServices";
 import _ from "underscore";
 import {useAsync} from 'react-hook-async';
 
@@ -120,6 +120,21 @@ export default function Directory() {
             });
         }
     };
+
+    const handleDelete = (outletId) => {
+        setConfirmDialog({
+            ...confirmDialog,
+            isOpen: false,
+          });
+        directoryServices.deleteOutlet(outletId);
+        // console.log("Record deleted");
+        getRecords();
+        setNotify({
+            isOpen: true,
+            message: "Record deleted successfully",
+            type: "success"
+        });
+    };
     
     
     const openInPopUp = (item) => {
@@ -186,7 +201,7 @@ export default function Directory() {
                                                 title: "Are you sure you want to delete this record?",
                                                 subTitle: "You can't undo this operation",
                                                 onConfirm: () => {
-                                                    console.log("Record deleted");
+                                                    handleDelete(item.outletid);
                                                 }
                                             });
                                         }}>
