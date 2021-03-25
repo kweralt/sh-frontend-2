@@ -104,19 +104,15 @@ export default function Directory() {
 
 
     const addOrEdit = (outlet, resetForm) => {
-        if (outlet.outletid === 0) {
-            console.log("Add new outlet"); // TODO: Connect with /directory/outlets/add
-        } else {
-            resetForm();
-            setRecordForEdit(null);
-            setOpenPopUp(false);
-            getRecords();
-            setNotify({
-                isOpen: true,
-                message: "Submitted successfully",
-                type: "success"
-            });
-        }
+        resetForm();
+        setRecordForEdit(null);
+        setOpenPopUp(false);
+        getRecords();
+        setNotify({
+            isOpen: true,
+            message: "Submitted successfully",
+            type: "success"
+        });
     };
 
     const handleDelete = (outletId) => {

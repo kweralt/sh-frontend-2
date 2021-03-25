@@ -65,7 +65,7 @@ export default function Tenants() {
 
   const getRecords = async () => {
     const data = await tenantServices.getTenants();
-    console.log(data);
+    // console.log(data);
     setRecords(data.data);
   }
 
@@ -94,12 +94,10 @@ export default function Tenants() {
   };
 
   const addOrEdit = (tenant, resetForm) => {
-    // if (tenant.id === 0) tenantServices.insertTenant(tenant);
-    // else tenantServices.updateTenant(tenant);
     resetForm();
     setRecordForEdit(null);
     setOpenPopup(false);
-    // setRecords(tenantServices.getAllTenants());
+    getRecords();
     setNotify({
       isOpen: true,
       message: "Submitted Successfully",
@@ -117,8 +115,8 @@ export default function Tenants() {
       ...confirmDialog,
       isOpen: false,
     });
-    // tenantServices.deleteTenant(id);
-    // setRecords(tenantServices.getAllTenants());
+    tenantServices.deleteTenant(id);
+    getRecords();
     setNotify({
       isOpen: true,
       message: "Deleted Successfully",
@@ -181,7 +179,7 @@ export default function Tenants() {
                           title: "Do you really want to delete this record",
                           subTitle: "You can't undo this operation",
                           onConfirm: () => {
-                            onDelete(item.id);
+                            onDelete(item.UserId);
                           },
                         });
                       }}
