@@ -131,7 +131,7 @@ export default function Directory() {
         <ContentWrapper>
             <PageHeader
                 title="Directory of Retail Outlets"
-                subTitle="hello"
+                subTitle=""
                 icon={<Map fontSize="large"/>}
             />
             <Paper>
