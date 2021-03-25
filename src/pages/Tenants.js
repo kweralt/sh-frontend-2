@@ -87,7 +87,7 @@ export default function Tenants() {
         if (target.value === "") return items;
         else
           return items.filter((x) =>
-            x.fullName.toLowerCase().includes(target.value)
+            x.UserName.toLowerCase().includes(target.value.toLowerCase())
           );
       },
     });
