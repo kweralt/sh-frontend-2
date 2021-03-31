@@ -25,9 +25,3 @@ export async function deleteTenant(values) {
     .then((response) => response.json())
     .then((result) => console.log(result));
 }
-
-export async function getInstitutions() {
-  const url = reqs.createUrl("/users/institutions");
-  return await fetch(url, reqs.generateRequestData("GET", null))
-    .then((response) => response.json());
-}
