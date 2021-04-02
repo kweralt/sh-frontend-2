@@ -8,9 +8,9 @@ export async function getOutlets() {
 
 export async function addOutlet(values) {
     console.log(values);
-    // const url = reqs.createUrl("/directory/outlets/add");
-    // return await fetch(url, reqs.generateRequestData("PUT", values))
-    //     .then((response) => response.json());
+    const url = reqs.createUrl("/directory/outlets/add");
+    return await fetch(url, reqs.generateRequestData("PUT", values))
+        .then((response) => response.json());
 }
 
 export async function updateOutlet(values) {
