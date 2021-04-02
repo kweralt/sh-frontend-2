@@ -7,9 +7,9 @@ import dateRangeValidation from "../utils/dateRangeValidation";
 import _, {keys} from "underscore";
 
 const initialFormValues = {
-    institution: "",
+    institutionid: "",
     outletname: "",
-    outlettype: "",
+    outlettypeid: "",
     email: "",
     unitnumber: "",
     tenancystart: new Date(),
@@ -38,11 +38,10 @@ export default function OutletForm(props) {
     const validInputs = (fieldValues = values) => {
         let temp = {...errors};
 
-        console.log(fieldValues);
+        // console.log(fieldValues);
 
-        // TODO: Finish input validation
-        if ("institution" in fieldValues) {
-            temp.institution = fieldValues.institution ? initialFormValues.institution : "This field is required";
+        if ("institutionid" in fieldValues) {
+            temp.institutionid = fieldValues.institutionid ? initialFormValues.institutionid : "This field is required";
         }
         if ("outletname" in fieldValues) {
             temp.outletname = fieldValues.outletname ? initialFormValues.outletname : "This field is required";
@@ -54,7 +53,7 @@ export default function OutletForm(props) {
             temp.email = /$^|.+@.+..+/.test(fieldValues.email) ? initialFormValues.email : "Invalid email";
         }
         if ("outlettype" in fieldValues) {
-            temp.outlettype = fieldValues.outlettype ? initialFormValues.outlettype : "This field is required";
+            temp.outlettypeid = fieldValues.outlettypeid ? initialFormValues.outlettypeid : "This field is required";
         }
         if (("tenancystart" in fieldValues) && ("tenancyend" in fieldValues)) {
             let validDateRange = dateRangeValidation(fieldValues.tenancystart, fieldValues.tenancyend);
@@ -66,7 +65,9 @@ export default function OutletForm(props) {
             ...temp,
         });
 
-        return Object.values(temp).every((x) => x === "");
+        // console.log(temp);
+
+        return Object.values(temp).every((x) => (x === "") || (x === null));
     };
 
     const {
@@ -91,6 +92,8 @@ export default function OutletForm(props) {
                 console.log(result);
             }
             addOrEdit(values, resetForm);
+        } else {
+            console.log("Something wrong");
         }
     };
 
@@ -121,10 +124,10 @@ export default function OutletForm(props) {
             <Grid container>
                 <Grid item sm={6}>
                     <Controls.Select
-                        name="institution"
+                        name="institutionid"
                         label="Institution"
-                        value={values.institution}
-                        error={errors.institution}
+                        value={values.institutionid}
+                        error={errors.institutionid}
                         onChange={handleInputChange}
                         options={institutions}
                     />
@@ -152,10 +155,10 @@ export default function OutletForm(props) {
                 </Grid>
                 <Grid item sm={6}>
                     <Controls.RadioGroup
-                        name="outlettype"
+                        name="outlettypeid"
                         label="Outlet Type"
-                        value={values.outlettype}
-                        error={errors.outlettype}
+                        value={values.outlettypeid}
+                        error={errors.outlettypeid}
                         onChange={handleInputChange}
                         items={outletTypes}
                     />

@@ -15,9 +15,9 @@ export async function addOutlet(values) {
 
 export async function updateOutlet(values) {
     console.log(values);
-    // const url = reqs.createUrl("/directory/outlets/update");
-    // return await fetch(url, reqs.generateRequestData("POST", values))
-    //     .then((response) => response.json());
+    const url = reqs.createUrl("/directory/outlets/update");
+    return await fetch(url, reqs.generateRequestData("POST", values))
+        .then((response) => response.json());
 }
 
 export async function deleteOutlet(values) {
