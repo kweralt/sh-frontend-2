@@ -39,6 +39,7 @@ const useStyles = makeStyles((theme) => ({
 const headCells = [
     { id: "institution", label: "Institution"},
     { id: "outletName", label: "Outlet Name"},
+    { id: "outletType", label: "Outlet Type"},
     { id: "unitNumber", label: "Unit Number"},
     { id: "tenantEmail", label: "Tenant Email"},
     { id: "tenancyStart", label: "Tenancy Start"},
@@ -70,6 +71,7 @@ export default function Directory() {
 
     const getRecords = async () => {
         const data = await directoryServices.getOutlets();
+        console.log(data);
         setRecords(data);
         
     };
@@ -174,6 +176,7 @@ export default function Directory() {
                                 <TableRow key={item.outletid}>
                                     <TableCell>{item.institutionname}</TableCell>
                                     <TableCell>{item.outletname}</TableCell>
+                                    <TableCell>{item.outlettypename}</TableCell>
                                     <TableCell>{item.unitnumber}</TableCell>
                                     <TableCell>{item.email}</TableCell>
                                     <TableCell>{item.tenancystart}</TableCell>
