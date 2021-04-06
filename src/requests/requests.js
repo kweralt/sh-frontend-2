@@ -23,3 +23,14 @@ export const generateRequestData = (requestMethod, bodyContent) => {
         };
     }
 };
+
+export const generateFormRequestData = (bodyContent) => {
+    return {
+        mode: "cors",
+        method: "POST",
+        headers: {
+            "Access-Control-Allow-Origin": BASE_URL
+        },
+        body: bodyContent
+    };
+}

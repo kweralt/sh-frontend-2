@@ -6,6 +6,7 @@ import {
   makeStyles
 } from '@material-ui/core';
 import ContentWrapper from "../components/ContentWrapper";
+import ExportImage from '../components/ExportImage';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -95,6 +96,7 @@ const Reports = () => {
         }}
       
       />
+      <ExportImage/>
       </div>
     </ContentWrapper>
   )
