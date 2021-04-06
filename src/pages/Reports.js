@@ -1,5 +1,10 @@
 import React from "react";
+import ExportImage from "../components/ExportImage";
 
 export default function Reports() {
-  return <div>// page for staff to add, export reports</div>;
+  return (
+    <>
+      <ExportImage />
+    </>
+  );
 }
