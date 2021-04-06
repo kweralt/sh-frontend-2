@@ -16,7 +16,8 @@ import { useState } from "react";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    height: "100vh",
+    width: "100%",
+    marginBottom: theme.spacing(2),
   },
   paper: {
     margin: theme.spacing(8, 8),
