@@ -1,4 +1,5 @@
 import {
+  FormHelperText,
   FormControl,
   FormControlLabel,
   FormLabel,
@@ -7,11 +8,11 @@ import {
 } from "@material-ui/core";
 
 export default function RadioGroup(props) {
-  const { name, label, value, onChange, items } = props;
+  const { name, label, value, error = null, onChange, items } = props;
   return (
-    <FormControl>
+    <FormControl variant="standard" {...(error && { error: true })}>
       <FormLabel>{label}</FormLabel>
-      <MuiRadioGroup row name={name} value={value} onChange={onChange}>
+      <MuiRadioGroup row name={name} value={parseInt(value)} onChange={onChange}>
         {items.map((item) => (
           <FormControlLabel
             key={item.id}
@@ -21,6 +22,7 @@ export default function RadioGroup(props) {
           />
         ))}
       </MuiRadioGroup>
+      {error && <FormHelperText>{error}</FormHelperText>}
     </FormControl>
   );
 }

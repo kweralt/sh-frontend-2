@@ -13,7 +13,7 @@ const Controls = {
   Checkbox,
   DatePicker,
   Button,
-  ActionButton,
+  ActionButton
 };
 
 export default Controls;
