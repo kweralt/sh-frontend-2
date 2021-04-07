@@ -4,7 +4,7 @@ import Controls from "./controls/Controls";
 import { useEffect, useState } from "react";
 import * as directoryServices from "../services/directoryServices";
 import dateRangeValidation from "../utils/dateRangeValidation";
-import _, {keys} from "underscore";
+import _ from "underscore";
 
 const initialFormValues = {
     institutionid: "",
@@ -110,6 +110,7 @@ export default function OutletForm(props) {
     };
 
     useEffect(async () => {
+        alert(localStorage.getItem("userId"));
         await getInstitutions();
         await getOutletTypes();
         if (recordForEdit != null) {
