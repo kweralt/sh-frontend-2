@@ -1,33 +1,63 @@
 import { useForm, Form } from "../components/useForm";
-import { Grid, Paper, Typography, makeStyles } from "@material-ui/core";
+import { Grid, Typography, makeStyles, TextField } from "@material-ui/core";
 import Controls from "./controls/Controls";
 import { useEffect, useState } from "react";
 import * as reportServices from "../services/reportServices";
 import ImageUploader from "react-images-upload";
 import RadioGroup from "./controls/RadioGroup";
+import Notification from "../components/Notification";
+import ConfirmDialog from "../components/ConfirmDialog";
+
+const responseObject = [
+  { id: 0, title: "Yes" },
+  { id: 1, title: "No" },
+  { id: 2, title: "NA" },
+];
+
+const imageExtensions = [".jpg", ".jpeg", ".gif", ".png"];
 
 const useStyles = makeStyles((theme) => ({
-  paper: {
-    // margin: theme.spacing(2),
-    padding: theme.spacing(3),
+  form: {
+    paddingTop: theme.spacing(2),
+    margin: theme.spacing(4)
   },
   radioGroup: {
     backgroundColor: "white",
     padding: theme.spacing(3),
-    margin: theme.spacing(3, 0)
+    margin: theme.spacing(3, 0),
+    borderRadius: "15px",
+    border: "solid 1px",
+    borderColor: "#cccccc"
+  },
+  inputField: {
+    backgroundColor: "white",
+    borderRadius: "15px",
+    border: "solid 1px",
+    borderColor: "#cccccc",
+    padding: theme.spacing(3, 2),
+    margin: theme.spacing(3, 0),
+  },
+  imageUpload: {
+    margin: theme.spacing(3, 0),
+  },
+  subSection: {
+    padding: theme.spacing(2, 0, 0),
   }
 }));
-
-const responseObject = [
-  { id: 0, title: "Y" },
-  { id: 1, title: "N" },
-  { id: 2, title: "NA" },
-];
 
 export default function ChecklistForm({ questions }) {
   const classes = useStyles();
   const [pictures, setPictures] = useState([]);
-  const [checklistQuestions, setChecklistQuestions] = useState([]);
+  const [notify, setNotify] = useState({
+    isOpen: false,
+    message: "",
+    type: "",
+  });
+  const [confirmDialog, setConfirmDialog] = useState({
+    isOpen: false,
+    title: "",
+    subTitle: "",
+  });
 
   const onDrop = (picture) => {
     setPictures([...pictures, picture]);
@@ -47,11 +77,21 @@ export default function ChecklistForm({ questions }) {
     resetForm,
   } = useForm(null, false, validateInputs);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = () => {
+    // e.preventDefault();
     if (validateInputs()) {
-      let result = await reportServices.submitChecklist(values);
-      console.log(result);
+      reportServices
+        .submitChecklist(values)
+        .then((result) => {
+          console.log(result);
+          questions = [];
+          setNotify({
+            isOpen: true,
+            message: "Submitted successfully",
+            type: "success",
+          });
+        })
+        .catch((err) => console.error(err));
     }
   };
 
@@ -70,7 +110,7 @@ export default function ChecklistForm({ questions }) {
         }
       })
     );
-    
+
     return checklistFields;
   };
 
@@ -82,10 +122,6 @@ export default function ChecklistForm({ questions }) {
 
   const handleChecklistSelect = (e) => {
     const { name, value } = e.target;
-    // const name = e.target.name;
-    // const value = e.target.value;
-    // console.log(name, value);
-    // console.log(values);
     setValues({
       ...values,
       checklistResponses: findAndReplace(
@@ -101,36 +137,65 @@ export default function ChecklistForm({ questions }) {
     var responsesArray = values.checklistResponses;
 
     //TODO: Find a faster way to update the selected value
-    let selected = new Object(responsesArray.find((element) => element.id === item));
+    let selected = new Object(
+      responsesArray.find((element) => element.id === item)
+    );
     return selected.value;
   };
 
   useEffect(() => {
-    console.log(checklistQuestions);
     if (questions !== null) {
-      setChecklistQuestions(questions);
       setValues({
+        tenantid: "",
         checklistResponses: createChecklistFields(questions),
-        files: []
+        files: [],
       });
     }
   }, [questions]);
 
   if (questions.length > 0) {
     return (
-      <Form onSubmit={handleSubmit}>
-        <Grid container>
-        <Typography variant="h4">Le Checklist of Tears</Typography>
-        {questions.map((category) => (
-          <Grid sm={12}>
-            <Typography variant="h5">{category.category}</Typography>
-            <Grid>
-              {category.subcategories.map((subcategory) => (
-                <Grid sm={12}>
-                  <Typography variant="h6">
-                    {subcategory !== null ? subcategory.subcategory : ""}
-                  </Typography>
-                  {subcategory !== null ? subcategory.questions.map((item) => {
+      <Form
+        onSubmit={() => {
+          setConfirmDialog({
+            isOpen: true,
+            title: "Are you sure you want to submit this report?",
+            subTitle: "",
+            onConfirm: () => {
+              handleSubmit();
+            },
+          });
+        }}
+      >
+        <div className={classes.form}>
+          <Typography variant="h4">Le Checklist of Tears</Typography>
+          <div className={classes.inputField}>
+            <Typography variant="body1">Enter ID of tenant to be audited</Typography>
+            {/* <Controls.Input
+              name="tenantid"
+              label="Tenant ID"
+              value={values.tenantid}
+              onChange={handleInputChange}
+            /> */}
+            <TextField
+              required
+              name="tenantid"
+              variant="standard"
+              value={values.tenantid}
+              onChange={handleInputChange}
+            />
+          </div>
+          {questions.map((category) => (
+            <Grid sm={12}>
+              <Typography variant="h5">{category.category}</Typography>
+              <div>
+                {category.subcategories.map((subcategory) => (
+                  <div className={classes.subSection}>
+                    <Typography variant="h6" component="div">
+                      {subcategory !== null ? subcategory.subcategory : ""}
+                    </Typography>
+                    {subcategory !== null ? (
+                      subcategory.questions.map((item) => {
                         return (
                           <div className={classes.radioGroup}>
                             <RadioGroup
@@ -139,27 +204,37 @@ export default function ChecklistForm({ questions }) {
                               value={getSelectValue(item.id)}
                               onChange={handleChecklistSelect}
                               items={responseObject}
+                              row={false}
                             />
                           </div>
                         );
-                      }) : (
-                    <div></div>
-                  )}
-                </Grid>
-              ))}
+                      })
+                    ) : (
+                      <div></div>
+                    )}
+                  </div>
+                ))}
+              </div>
             </Grid>
-          </Grid>
-        ))}
-        <ImageUploader
-          label="Non-compliance images"
-          withIcon={true}
-          withPreview={true}
-          onChange={onDrop}
-          imgExtension={[".jpg", ".jpeg", ".gif", ".png"]}
-          maxFileSize={5242880}
-        />
-        <Controls.Button type="submit" text="Submit" />
-        </Grid>
+          ))}
+          <div>
+            <Typography variant="h5">Photos of Non-Compliances</Typography>
+            <ImageUploader
+              label="Non-compliance images"
+              withIcon={true}
+              withPreview={true}
+              onChange={onDrop}
+              imgExtension={imageExtensions}
+              maxFileSize={5242880}
+            />
+          </div>
+          <Controls.Button type="submit" text="Submit" />
+          <Notification notify={notify} setNotify={setNotify} />
+          <ConfirmDialog
+            confirmDialog={confirmDialog}
+            setConfirmDialog={setConfirmDialog}
+          />
+        </div>
       </Form>
     );
   } else {

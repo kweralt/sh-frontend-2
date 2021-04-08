@@ -111,7 +111,7 @@ export default function OutletForm(props) {
     };
 
     useEffect(async () => {
-        alert(localStorage.getItem("userId"));
+        // alert(localStorage.getItem("userId"));
         await getInstitutions();
         await getOutletTypes();
         if (recordForEdit != null) {

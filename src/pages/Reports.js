@@ -1,36 +1,34 @@
-import React, { useEffect, useState } from "react";
+import React, {useState } from "react";
 import Survey from "material-survey/components/Survey";
-import {
-  Container,
-  Grid,
-  makeStyles,
-  Paper,
-  Typography,
-} from "@material-ui/core";
+import {makeStyles} from "@material-ui/core";
 import AssignmentIcon from "@material-ui/icons/Assignment";
 import PageHeader from "../components/PageHeader";
 import ContentWrapper from "../components/ContentWrapper";
 import ChecklistForm from "../components/ChecklistForm";
-import RadioGroup from "../components/controls/RadioGroup";
+import Notification from "../components/Notification";
 import * as reportServices from "../services/reportServices";
-import _, { toArray } from "underscore";
 
 const useStyles = makeStyles((theme) => ({
   root: {
     backgroundColor: theme.palette.background.dark,
     minHeight: "100%",
     paddingBottom: theme.spacing(3),
-    paddingTop: theme.spacing(3),
+    //paddingTop: theme.spacing(3),
   },
-  paper: {
-    backgroundColor: "#e8ecff",
-    margin: theme.spacing(5),
-    padding: theme.spacing(3),
+  checklistSelect: {
+    backgroundColor: theme.palette.background.default,
+    padding: theme.spacing(3, 0),
   },
+  checklistForm: {
+    // backgroundColor: "#f0f8ff",
+    // backgroundColor: "white",
+    // borderRadius: "15px",
+    // border: "solid 1px",
+    // borderColor: "#cccccc",
+  }
 }));
 
-//TODO: Figure out how to dynamically set the checklist depending on the checklist type
-
+//TODO: Don't hardcode this pls
 const checklistTypeOptions = [
   "F&B",
   "Non-F&B",
@@ -40,8 +38,11 @@ const checklistTypeOptions = [
 const Reports = () => {
   const classes = useStyles();
   const [questions, setQuestions] = useState([]);
-  const [checklistType, setChecklistType] = useState(null);
-  const [checklistChanged, setChecklistChanged] = useState(false);
+  const [notify, setNotify] = useState({
+    isOpen: false,
+    messsage: "",
+    type: "",
+  })
 
   const handleChecklistTypeSelected = (answers) => {
     let selectedType = answers.checklistType;
@@ -55,34 +56,34 @@ const Reports = () => {
     reportServices
       .getQuestions({ checklistType: selectedTypeIndex })
       .then((data) => {
-        // console.log(data);
-        setChecklistType(selectedTypeIndex);
         setQuestions(data);
+        setNotify({
+          isOpen: true,
+          message: "Checklist type changed",
+          type: "success"
+        });
       })
       .catch((error) => {
         console.error(error);
         setQuestions([]);
+        setNotify({
+          isOpen: true,
+          message: "Cannot open checklist",
+          type: "error"
+        });
       });
   };
-
-  // const toggleChecklist = () => {
-  //   if (checklistType !== null && questions.length > 0) {
-  //     return <ChecklistForm questions={questions} />;
-  //   } else {
-  //     return <div/>
-  //   }
-  // }
 
   return (
     <ContentWrapper>
       <div className={classes.root}>
         <PageHeader
           title="New Audit Report"
-          subTitle="hello"
+          subTitle=""
           icon={<AssignmentIcon fontSize="large" />}
         />
-        <Paper className={classes.paper}>
-          <Survey
+        <div className={classes.paper}>
+        <Survey
             onFinish={handleChecklistTypeSelected}
             form={{
               questions: [
@@ -95,11 +96,11 @@ const Reports = () => {
               ],
             }}
           />
-        </Paper>
-        <Container>
-          {/* {toggleChecklist()} */}
+        </div>
+        <div className={classes.checklistForm}>
           <ChecklistForm questions={questions}/>
-        </Container>
+        </div>
+        <Notification notify={notify} setNotify={setNotify} />
       </div>
     </ContentWrapper>
   );

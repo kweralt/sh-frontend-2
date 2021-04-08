@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const headCells = [
-  { id: "userId", label: "Tenant Id"},
+  { id: "userId", label: "Tenant Id" },
   { id: "fullName", label: "Tenant Name" },
   { id: "email", label: "Email Address" },
   { id: "actions", label: "Actions", disableSorting: true },
@@ -68,7 +68,7 @@ export default function Tenants() {
     const data = await tenantServices.getTenants();
     // console.log(data);
     setRecords(data.data);
-  }
+  };
 
   useEffect(() => {
     getRecords();
