@@ -106,6 +106,7 @@ export default function OutletForm(props) {
     const getOutletTypes = async () => {
         const data = await directoryServices.getOutletTypes();
         const typesData = changeJSONKeys(data.data);
+        console.log(typesData);
         setOutletTypes(typesData);
     };
 

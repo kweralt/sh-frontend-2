@@ -10,7 +10,7 @@ export async function getQuestions(values) {
   );
 }
 
-export async function submitChecklist(values) {
+export function submitChecklist(values) {
   const body = {
     auditor: localStorage.getItem("userId"),
     date: new Date(),
