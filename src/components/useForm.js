@@ -11,7 +11,7 @@ export function useForm(initialFValues, validateOnChange = false, validate) {
       ...values,
       [name]: value,
     });
-    console.log(values);
+    // console.log(values);
     // single control validation
     if (validateOnChange) validate({ [name]: value });
   };

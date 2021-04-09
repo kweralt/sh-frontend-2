@@ -19,7 +19,7 @@ const imageExtensions = [".jpg", ".jpeg", ".gif", ".png"];
 const useStyles = makeStyles((theme) => ({
   form: {
     paddingTop: theme.spacing(2),
-    margin: theme.spacing(4)
+    margin: theme.spacing(4),
   },
   radioGroup: {
     backgroundColor: "white",
@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(3, 0),
     borderRadius: "15px",
     border: "solid 1px",
-    borderColor: "#cccccc"
+    borderColor: "#cccccc",
   },
   inputField: {
     backgroundColor: "white",
@@ -42,7 +42,10 @@ const useStyles = makeStyles((theme) => ({
   },
   subSection: {
     padding: theme.spacing(2, 0, 0),
-  }
+  },
+  weightageLabel: {
+    fontStyle: "italic",
+  },
 }));
 
 export default function ChecklistForm({ questions }) {
@@ -78,13 +81,18 @@ export default function ChecklistForm({ questions }) {
   } = useForm(null, false, validateInputs);
 
   const handleSubmit = () => {
-    // e.preventDefault();
+    // e.preventDefault()
+    console.log(values);
+    setConfirmDialog({
+      ...confirmDialog,
+      isOpen: false,
+    });
     if (validateInputs()) {
       reportServices
         .submitChecklist(values)
         .then((result) => {
           console.log(result);
-          questions = [];
+          // questions = [];
           setNotify({
             isOpen: true,
             message: "Submitted successfully",
@@ -95,8 +103,28 @@ export default function ChecklistForm({ questions }) {
     }
   };
 
+  const handleClearChecklist = () => {
+    setConfirmDialog({
+      ...confirmDialog,
+      isOpen: false
+    });
+    questions = [];
+    // setValues(null);
+  };
+
   const createChecklistFields = () => {
     var checklistFields = [];
+    var data = questions;
+
+    data.map((category) => {
+      category.subcategories.map((subcategory) => {
+        if (subcategory !== null) {
+          subcategory.questions.map((item) => item["value"] = "");
+        }
+      })
+    });
+
+    console.log(data);
 
     questions.map((category) =>
       category.subcategories.map((subcategory) => {
@@ -155,28 +183,13 @@ export default function ChecklistForm({ questions }) {
 
   if (questions.length > 0) {
     return (
-      <Form
-        onSubmit={() => {
-          setConfirmDialog({
-            isOpen: true,
-            title: "Are you sure you want to submit this report?",
-            subTitle: "",
-            onConfirm: () => {
-              handleSubmit();
-            },
-          });
-        }}
-      >
+      <Form>
         <div className={classes.form}>
           <Typography variant="h4">Le Checklist of Tears</Typography>
           <div className={classes.inputField}>
-            <Typography variant="body1">Enter ID of tenant to be audited</Typography>
-            {/* <Controls.Input
-              name="tenantid"
-              label="Tenant ID"
-              value={values.tenantid}
-              onChange={handleInputChange}
-            /> */}
+            <Typography variant="body1">
+              Enter ID of tenant to be audited
+            </Typography>
             <TextField
               required
               name="tenantid"
@@ -188,6 +201,7 @@ export default function ChecklistForm({ questions }) {
           {questions.map((category) => (
             <Grid sm={12}>
               <Typography variant="h5">{category.category}</Typography>
+              <Typography variant="body1" className={classes.weightageLabel}>Weightage: {category.weightage}</Typography>
               <div>
                 {category.subcategories.map((subcategory) => (
                   <div className={classes.subSection}>
@@ -228,7 +242,35 @@ export default function ChecklistForm({ questions }) {
               maxFileSize={5242880}
             />
           </div>
-          <Controls.Button type="submit" text="Submit" />
+          <Controls.Button
+            color="primary"
+            text="Submit"
+            onClick={() => {
+              setConfirmDialog({
+                isOpen: true,
+                title: "Are you sure you want to submit this report?",
+                subTitle: "",
+                onConfirm: () => {
+                  handleSubmit();
+                },
+              });
+            }}
+          />
+          <Controls.Button
+            color="default"
+            text="Clear"
+            onClick={() => {
+              setConfirmDialog({
+                isOpen: true,
+                title: "Are you sure you want to clear this checklist?",
+                subTitle: "Like really really sure?",
+                onConfirm: () => {
+                  handleClearChecklist();
+                }
+               })
+            }}
+          />
+          <Controls.BackToTopButton/>
           <Notification notify={notify} setNotify={setNotify} />
           <ConfirmDialog
             confirmDialog={confirmDialog}
