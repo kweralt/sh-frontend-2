@@ -4,30 +4,26 @@ import { render, fireEvent } from "@testing-library/react";
 import { act } from "react-dom/test-utils";
 
 describe("Login component input validation", () => {
-  // TODO: Pass setToken prop
-  // describe("with valid inputs", () => {
-  //   it("calls the onSubmit function", async () => {
-  //     const mockOnSubmit = jest.fn();
-  //     const { getByLabelText, getByRole } = render(
-  //       <Login onSubmit={mockOnSubmit} />
-  //     );
-
-  //     await act(async () => {
-  //       fireEvent.change(getByLabelText("Email Address *"), {
-  //         target: { value: "patrick@squidwardcommunitycollege.edu" },
-  //       });
-  //       fireEvent.change(getByLabelText("Password *"), {
-  //         target: { value: "patrick" },
-  //       });
-  //     });
-
-  //     await act(async () => {
-  //       fireEvent.click(getByRole("button"));
-  //     });
-
-  //     expect(mockOnSubmit).toHaveBeenCalled();
-  //   });
-  // });
+  describe("login with invalid email and password", () => {
+    it("server returns 500 status", async () => {
+      async function loginUser(credentials) {
+        return fetch("http://localhost:8080/auth", {
+          mode: "cors",
+          method: "POST",
+          headers: {
+            "Access-Control-Allow-Origin": "http://localhost:8080",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(credentials),
+        }).then((data) => data.json());
+      }
+      const data = await loginUser({
+        email: "thisisnotavaliduser@mail.com",
+        password: "invaliduser",
+      });
+      expect(data.status).toBe(500);
+    });
+  });
 
   describe("with invalid email", () => {
     it("renders the email validation error", async () => {
