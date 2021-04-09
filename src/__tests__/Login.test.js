@@ -5,7 +5,7 @@ import { act } from "react-dom/test-utils";
 
 describe("Login component input validation", () => {
   describe("login with invalid email and password", () => {
-    it("server returns 500 status", async () => {
+    it("server returns 404 status", async () => {
       async function loginUser(credentials) {
         return fetch("http://localhost:8080/auth", {
           mode: "cors",
@@ -21,7 +21,7 @@ describe("Login component input validation", () => {
         email: "thisisnotavaliduser@mail.com",
         password: "invaliduser",
       });
-      expect(data.status).toBe(500);
+      expect(data.status).toBe(404);
     });
   });
 
