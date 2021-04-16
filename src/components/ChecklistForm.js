@@ -3,10 +3,12 @@ import { Grid, Typography, makeStyles, TextField } from "@material-ui/core";
 import Controls from "./controls/Controls";
 import { useEffect, useState } from "react";
 import * as reportServices from "../services/reportServices";
+import * as reqs from "../requests/requests";
 import ImageUploader from "react-images-upload";
 import RadioGroup from "./controls/RadioGroup";
 import Notification from "../components/Notification";
 import ConfirmDialog from "../components/ConfirmDialog";
+
 
 const responseObject = [
   { id: 0, title: "Yes" },
@@ -63,7 +65,9 @@ export default function ChecklistForm({ questions }) {
   });
 
   const onDrop = (picture) => {
-    setPictures([...pictures, picture]);
+    // console.log(picture);
+    setPictures(pictures.concat(picture));
+    // setPictures([...pictures, picture]);
   };
 
   //TODO: Finish input validation
@@ -81,15 +85,20 @@ export default function ChecklistForm({ questions }) {
   } = useForm(null, false, validateInputs);
 
   const handleSubmit = () => {
-    // e.preventDefault()
-    console.log(values);
+    // console.log(pictures);
+    const formResponse = {
+      checklistResponses: values,
+      images: pictures,
+    };
+
     setConfirmDialog({
       ...confirmDialog,
       isOpen: false,
     });
+
     if (validateInputs()) {
       reportServices
-        .submitChecklist(values)
+        .submitChecklist(formResponse)
         .then((result) => {
           console.log(result);
           // questions = [];
@@ -123,8 +132,6 @@ export default function ChecklistForm({ questions }) {
         }
       })
     });
-
-    console.log(data);
 
     questions.map((category) =>
       category.subcategories.map((subcategory) => {

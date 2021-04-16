@@ -10,10 +10,20 @@ export async function getQuestions(values) {
 }
 
 export async function submitChecklist(values) {
-  const body = {
-    auditor: localStorage.getItem("userId"),
-    date: new Date(),
-    answers: values,
-  };
-  return body;
+  // console.log(values.images);
+  const url = reqs.createUrl("/report/image/upload/multiple");
+
+  var form = new FormData();
+
+  form.append("checklistResponses", values.checklistResponses);
+  form.append("date", new Date());
+  form.append("auditorId", localStorage.getItem("userId"));
+
+  for (var i = 0; i < values.images.length; i++) {
+    form.append("images", values.images[i]);
+  }
+
+  return await fetch(url, reqs.generateFormRequestData(form)).then(
+    (response) => response.status
+  );
 }
