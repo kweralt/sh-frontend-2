@@ -38,6 +38,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "dev": "BROWSER='chrome' react-scripts start",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

@@ -1,4 +1,5 @@
 import * as reqs from "../requests/requests";
+import computeScore from "../utils/scoreComputation";
 
 export async function getQuestions(values) {
   const url = reqs.createUrl("/report/questions/get");
@@ -10,12 +11,15 @@ export async function getQuestions(values) {
 }
 
 export async function submitChecklist(values) {
-  // console.log(values.images);
   const url = reqs.createUrl("/report/image/upload/multiple");
 
   var form = new FormData();
 
-  form.append("checklistResponses", values.checklistResponses);
+  let score = computeScore(values.report.checklistResponses);
+  // console.log(score);
+
+  form.append("checklistResponses", JSON.stringify(values.report));
+  form.append("score", score);
   form.append("date", new Date());
   form.append("auditorId", localStorage.getItem("userId"));
 
