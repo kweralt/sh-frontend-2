@@ -16,7 +16,8 @@ export async function getQuestions(typeId) {
 }
 
 export async function submitChecklist(report, images, checklistType) {
-  const url = reqs.createUrl("/report/image/upload/multiple");
+  // const url = reqs.createUrl("/report/image/upload/multiple");
+  const url = reqs.createUrl("/report/submit");
 
   var form = new FormData();
 
