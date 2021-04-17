@@ -1,4 +1,4 @@
-import React, {useState } from "react";
+import React, {useEffect, useState } from "react";
 import Survey from "material-survey/components/Survey";
 import {makeStyles} from "@material-ui/core";
 import AssignmentIcon from "@material-ui/icons/Assignment";
@@ -19,24 +19,12 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.background.default,
     padding: theme.spacing(3, 0),
   },
-  checklistForm: {
-    // backgroundColor: "#f0f8ff",
-    // backgroundColor: "white",
-    // borderRadius: "15px",
-    // border: "solid 1px",
-    // borderColor: "#cccccc",
-  }
 }));
-
-//TODO: Don't hardcode this pls
-const checklistTypeOptions = [
-  "F&B",
-  "Non-F&B",
-  "COVID Safe Management Compliance",
-];
 
 const Reports = () => {
   const classes = useStyles();
+  const [currentChecklistType, setCurrentChecklistType] = useState(0);
+  const [checklistTypes, setChecklistTypes] = useState([]);
   const [questions, setQuestions] = useState([]);
   const [notify, setNotify] = useState({
     isOpen: false,
@@ -49,14 +37,15 @@ const Reports = () => {
     var selectedTypeIndex;
 
     //TODO: Figure out a better way to do this
-    for (var i = 0; i < checklistTypeOptions.length; i++) {
-      if (checklistTypeOptions[i] === selectedType) selectedTypeIndex = i + 1;
+    for (var i = 0; i < checklistTypes.length; i++) {
+      if (checklistTypes[i] === selectedType) selectedTypeIndex = i + 1;
     };
 
     reportServices
-      .getQuestions({ checklistType: selectedTypeIndex })
+      .getQuestions(selectedTypeIndex)
       .then((data) => {
         setQuestions(data);
+        setCurrentChecklistType(selectedTypeIndex);
         setNotify({
           isOpen: true,
           message: "Checklist type changed",
@@ -66,6 +55,7 @@ const Reports = () => {
       .catch((error) => {
         console.error(error);
         setQuestions([]);
+        setCurrentChecklistType(0);
         setNotify({
           isOpen: true,
           message: "Cannot open checklist",
@@ -73,6 +63,22 @@ const Reports = () => {
         });
       });
   };
+
+  useEffect(() => {
+    reportServices.getChecklistTypes()
+    .then((data) => {
+      let checklistTypesArray = [];
+      // console.log(data);
+
+      data.forEach((type) => {
+        checklistTypesArray.push(type.ChecklistName);
+      })
+      setChecklistTypes(checklistTypesArray);
+    })
+    .catch((err) => {
+      console.error(err);
+    })
+  }, []);
 
   return (
     <ContentWrapper>
@@ -91,14 +97,14 @@ const Reports = () => {
                   name: "checklistType",
                   title: "Select Checklist Type",
                   type: "radiogroup",
-                  choices: checklistTypeOptions,
+                  choices: checklistTypes,
                 },
               ],
             }}
           />
         </div>
-        <div className={classes.checklistForm}>
-          <ChecklistForm questions={questions}/>
+        <div>
+          <ChecklistForm questions={questions} checklistType={currentChecklistType}/>
         </div>
         <Notification notify={notify} setNotify={setNotify} />
       </div>

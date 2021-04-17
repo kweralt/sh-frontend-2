@@ -17,7 +17,9 @@ export default function computeScore(responseObject) {
 
         });
 
-        categoryScores.push(weightage * rawScore / numberOfQuestions);
+        var categoryTotal = (numberOfQuestions === 0) ? 0 : weightage * rawScore / numberOfQuestions;
+
+        categoryScores.push(categoryTotal);
         
     });
 

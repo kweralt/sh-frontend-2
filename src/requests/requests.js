@@ -2,7 +2,7 @@ export const BASE_URL = "http://localhost:8080";
 
 export const createUrl = (path) => `${BASE_URL}${path}`;
 
-export const generateRequestData = (requestMethod, bodyContent) => {
+export const generateRequestData = (requestMethod, bodyContent = null) => {
     if (requestMethod === "GET") {
         return {
             mode: "cors",

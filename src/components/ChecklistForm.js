@@ -48,7 +48,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function ChecklistForm({ questions }) {
+export default function ChecklistForm({ questions, checklistType = 0 }) {
   const classes = useStyles();
   const [pictures, setPictures] = useState([]);
   const [notify, setNotify] = useState({
@@ -81,11 +81,6 @@ export default function ChecklistForm({ questions }) {
   } = useForm(null, false, validateInputs);
 
   const handleSubmit = () => {
-    const formResponse = {
-      report: values,
-      images: pictures,
-    };
-
     setConfirmDialog({
       ...confirmDialog,
       isOpen: false,
@@ -93,7 +88,7 @@ export default function ChecklistForm({ questions }) {
 
     if (validateInputs()) {
       reportServices
-        .submitChecklist(formResponse)
+        .submitChecklist(values, pictures, checklistType)
         .then((result) => {
           console.log(result);
           // questions = [];
@@ -113,6 +108,7 @@ export default function ChecklistForm({ questions }) {
       isOpen: false,
     });
     questions = [];
+    checklistType = 0;
     // setValues(null);
   };
 
@@ -278,7 +274,6 @@ export default function ChecklistForm({ questions }) {
               });
             }}
           />
-          <Controls.BackToTopButton />
           <Notification notify={notify} setNotify={setNotify} />
           <ConfirmDialog
             confirmDialog={confirmDialog}
