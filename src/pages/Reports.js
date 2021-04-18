@@ -1,6 +1,6 @@
-import React, {useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Survey from "material-survey/components/Survey";
-import {makeStyles} from "@material-ui/core";
+import { makeStyles } from "@material-ui/core";
 import AssignmentIcon from "@material-ui/icons/Assignment";
 import PageHeader from "../components/PageHeader";
 import ContentWrapper from "../components/ContentWrapper";
@@ -30,7 +30,7 @@ const Reports = () => {
     isOpen: false,
     messsage: "",
     type: "",
-  })
+  });
 
   const handleChecklistTypeSelected = (answers) => {
     let selectedType = answers.checklistType;
@@ -39,7 +39,7 @@ const Reports = () => {
     //TODO: Figure out a better way to do this
     for (var i = 0; i < checklistTypes.length; i++) {
       if (checklistTypes[i] === selectedType) selectedTypeIndex = i + 1;
-    };
+    }
 
     reportServices
       .getQuestions(selectedTypeIndex)
@@ -49,7 +49,7 @@ const Reports = () => {
         setNotify({
           isOpen: true,
           message: "Checklist type changed",
-          type: "success"
+          type: "success",
         });
       })
       .catch((error) => {
@@ -59,25 +59,26 @@ const Reports = () => {
         setNotify({
           isOpen: true,
           message: "Cannot open checklist",
-          type: "error"
+          type: "error",
         });
       });
   };
 
   useEffect(() => {
-    reportServices.getChecklistTypes()
-    .then((data) => {
-      let checklistTypesArray = [];
-      // console.log(data);
+    reportServices
+      .getChecklistTypes()
+      .then((data) => {
+        let checklistTypesArray = [];
+        // console.log(data);
 
-      data.forEach((type) => {
-        checklistTypesArray.push(type.ChecklistName);
+        data.forEach((type) => {
+          checklistTypesArray.push(type.ChecklistName);
+        });
+        setChecklistTypes(checklistTypesArray);
       })
-      setChecklistTypes(checklistTypesArray);
-    })
-    .catch((err) => {
-      console.error(err);
-    })
+      .catch((err) => {
+        console.error(err);
+      });
   }, []);
 
   return (
@@ -89,7 +90,7 @@ const Reports = () => {
           icon={<AssignmentIcon fontSize="large" />}
         />
         <div className={classes.paper}>
-        <Survey
+          <Survey
             onFinish={handleChecklistTypeSelected}
             form={{
               questions: [
@@ -104,7 +105,10 @@ const Reports = () => {
           />
         </div>
         <div>
-          <ChecklistForm questions={questions} checklistType={currentChecklistType}/>
+          <ChecklistForm
+            questions={questions}
+            checklistType={currentChecklistType}
+          />
         </div>
         <Notification notify={notify} setNotify={setNotify} />
       </div>

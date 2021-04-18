@@ -27,5 +27,5 @@ export default function computeScore(responseObject) {
 
     categoryScores.forEach((score) => totalScore += score);
 
-    return totalScore;
+    return totalScore.toFixed(2);
 }
