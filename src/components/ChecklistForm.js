@@ -1,10 +1,5 @@
 import { useForm, Form } from "../components/useForm";
-import {
-  Grid,
-  Typography,
-  makeStyles,
-  TextField,
-} from "@material-ui/core";
+import { Grid, Typography, makeStyles, TextField } from "@material-ui/core";
 import Controls from "./controls/Controls";
 import { useEffect, useState } from "react";
 import * as reportServices from "../services/reportServices";
@@ -12,6 +7,7 @@ import ImageUploader from "react-images-upload";
 import RadioGroup from "./controls/RadioGroup";
 import Notification from "../components/Notification";
 import ConfirmDialog from "../components/ConfirmDialog";
+import computeScore from "../utils/scoreComputation";
 
 const responseObject = [
   { id: 0, title: "Yes" },
@@ -20,6 +16,7 @@ const responseObject = [
 ];
 
 const imageExtensions = [".jpg", ".jpeg", ".gif", ".png"];
+const passingScore = 95;
 
 const useStyles = makeStyles((theme) => ({
   form: {
@@ -59,6 +56,8 @@ const useStyles = makeStyles((theme) => ({
 export default function ChecklistForm({ questions, checklistType = 0 }) {
   const classes = useStyles();
   const [pictures, setPictures] = useState([]);
+  const [score, setScore] = useState(0);
+  const [rectificationNeeded, setRectificationNeeded] = useState(false);
   const [notify, setNotify] = useState({
     isOpen: false,
     message: "",
@@ -96,7 +95,7 @@ export default function ChecklistForm({ questions, checklistType = 0 }) {
 
     if (validateInputs()) {
       reportServices
-        .submitChecklist(values, pictures, checklistType)
+        .submitChecklist(values, pictures, checklistType, score)
         .then((result) => {
           console.log(result);
           if (result === 200) {
@@ -177,6 +176,15 @@ export default function ChecklistForm({ questions, checklistType = 0 }) {
         value
       ),
     });
+    let newScore = computeScore(values.checklistResponses);
+    setScore(newScore);
+    setRectificationNeeded(newScore < passingScore)
+    if (newScore >= passingScore) {
+      setValues({
+        ...values,
+        resolveBy: ""
+      });
+    };
   };
 
   const getSelectValue = (itemId) => {
@@ -201,6 +209,7 @@ export default function ChecklistForm({ questions, checklistType = 0 }) {
         tenantid: "",
         checklistResponses: createChecklistFields(questions),
         files: [],
+        resolveBy: "",
       });
     }
   }, [questions]);
@@ -266,16 +275,20 @@ export default function ChecklistForm({ questions, checklistType = 0 }) {
             <div className={classes.inputField}>
               <Typography variant="body1">Additional Comments</Typography>
               <TextField
+                name="comments"
                 id="outlined-multiline-static"
                 multiline
                 rowsMax={10}
                 variant="standard"
+                onChange={handleInputChange}
               />
             </div>
           </div>
 
           <div className={classes.section}>
-            <Typography variant="h5">Section: Photos of Non-Compliances</Typography>
+            <Typography variant="h5">
+              Section: Photos of Non-Compliances
+            </Typography>
             <ImageUploader
               label="Non-compliance images"
               withIcon={true}
@@ -284,6 +297,26 @@ export default function ChecklistForm({ questions, checklistType = 0 }) {
               imgExtension={imageExtensions}
               maxFileSize={5242880}
             />
+          </div>
+          <div className={classes.section}>
+            <Typography variant="h5">
+              Section: Rectification Deadline
+            </Typography>
+            <div className={classes.inputField}>
+              <Typography variant="h6">Total score: {score} %</Typography>
+              {rectificationNeeded ? (
+                <Controls.DatePicker
+                  name="resolveBy"
+                  label="To be resolved By"
+                  value={values.resolveBy}
+                  onChange={handleInputChange}
+                />
+              ) : (
+                <Typography variant="body1">
+                  No rectification required.
+                </Typography>
+              )}
+            </div>
           </div>
           <Grid container direction="row" justify="center" alignItems="stretch">
             <Controls.Button
