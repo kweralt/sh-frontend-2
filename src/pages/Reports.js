@@ -21,18 +21,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-<<<<<<< HEAD
-//TODO: Don't hardcode this pls
-const checklistTypeOptions = [
-  "F&B",
-  "Non-F&B",
-  "COVID Safe Management Compliance",
-];
-
-
-
-=======
->>>>>>> fc4ee3dbcdd0a486a7c64d3f4bd5fc2edee4bde3
 const Reports = () => {
   const classes = useStyles();
   const [currentChecklistType, setCurrentChecklistType] = useState(0);
