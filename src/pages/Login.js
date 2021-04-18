@@ -1,9 +1,10 @@
-import { makeStyles, Grid, Avatar, Typography } from "@material-ui/core";
-import { LockOutlined } from "@material-ui/icons";
+import { makeStyles, Grid, Typography } from "@material-ui/core";
 import PropTypes from "prop-types";
+import { useState } from "react";
 import Controls from "../components/controls/Controls";
 import { useForm, Form } from "../components/useForm";
-import logo from '../assets/singhealth_logo.png';
+import logo from "../assets/singhealth_logo.png";
+import Notification from "../components/Notification";
 import * as reqs from "../requests/requests";
 
 const useStyles = makeStyles((theme) => ({
@@ -21,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
   logo: {
     width: "15%",
     height: "15%",
-    marginBottom: theme.spacing(3)
+    marginBottom: theme.spacing(3),
   },
   form: {
     width: "100%", // IE 11
@@ -29,7 +30,7 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    justifyContent: "center"
+    justifyContent: "center",
   },
   input: {
     maxWidth: "500px", //TODO: Figure out best width for the input fields
@@ -50,12 +51,19 @@ const initialFValues = {
 async function loginUser(credentials) {
   const url = reqs.createUrl("/auth");
   return await fetch(url, reqs.generateRequestData("POST", credentials))
-  .then((data) => data.json())
-  .catch((err) => console.error(err));
+    .then((data) => {
+      return data.json();
+    })
+    .catch((err) => console.error(err));
 }
 
 export default function Login({ setToken }) {
   const classes = useStyles();
+  const [notify, setNotify] = useState({
+    isOpen: false,
+    message: "",
+    type: "",
+  });
 
   const validate = (fieldValues = values) => {
     // only update based on properties below
@@ -84,27 +92,42 @@ export default function Login({ setToken }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (validate()) {
-      // console.log("testing");
-      const responseData = await loginUser(values);
-      localStorage.setItem("userId", responseData.user.id);
-      setToken(responseData);
+      await loginUser(values)
+        .then((data) => {
+          if (data.status === 200) {
+            localStorage.setItem("userId", data.user.id);
+            setToken(data);
+          } else {
+            setNotify({
+              isOpen: true,
+              message: data.error,
+              type: "error",
+            });
+          }
+        })
+        .catch((err) => {
+          console.error(err);
+          setNotify({
+            isOpen: true,
+            message: "Error logging in",
+            type: "error",
+          });
+        });
     }
   };
 
   return (
     <div className={classes.root}>
       <Grid className={classes.paper}>
-        <img className={classes.logo} src={logo}/>
+        <img className={classes.logo} src={logo} />
         <Typography variant="h5">
           Auditing Platform and Retail Service Management
         </Typography>
-
       </Grid>
       <Form className={classes.form} onSubmit={handleSubmit}>
-        <Typography variant="h6">
-          Sign In
-        </Typography>
-        <Controls.Input className={classes.input}
+        <Typography variant="h6">Sign In</Typography>
+        <Controls.Input
+          className={classes.input}
           type="text"
           variant="outlined"
           margin="normal"
@@ -119,7 +142,8 @@ export default function Login({ setToken }) {
           onChange={handleInputChange}
           error={errors.email}
         />
-        <Controls.Input className={classes.input}
+        <Controls.Input
+          className={classes.input}
           type="password"
           variant="outlined"
           margin="normal"
@@ -146,6 +170,7 @@ export default function Login({ setToken }) {
         {/* <Link href="#" variant="body2">
           Forgot password?
         </Link> */}
+        <Notification notify={notify} setNotify={setNotify} />
       </Form>
     </div>
   );

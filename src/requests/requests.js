@@ -1,8 +1,8 @@
-const BASE_URL = "http://localhost:8080";
+export const BASE_URL = "http://localhost:8080";
 
 export const createUrl = (path) => `${BASE_URL}${path}`;
 
-export const generateRequestData = (requestMethod, bodyContent) => {
+export const generateRequestData = (requestMethod, bodyContent = null) => {
     if (requestMethod === "GET") {
         return {
             mode: "cors",
@@ -29,7 +29,7 @@ export const generateFormRequestData = (bodyContent) => {
         mode: "cors",
         method: "POST",
         headers: {
-            "Access-Control-Allow-Origin": BASE_URL
+            "Access-Control-Allow-Origin": BASE_URL,
         },
         body: bodyContent
     };

@@ -48,7 +48,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function ChecklistForm({ questions }) {
+export default function ChecklistForm({ questions, checklistType = 0 }) {
   const classes = useStyles();
   const [pictures, setPictures] = useState([]);
   const [notify, setNotify] = useState({
@@ -63,7 +63,7 @@ export default function ChecklistForm({ questions }) {
   });
 
   const onDrop = (picture) => {
-    setPictures([...pictures, picture]);
+    setPictures(pictures.concat(picture));
   };
 
   //TODO: Finish input validation
@@ -81,15 +81,14 @@ export default function ChecklistForm({ questions }) {
   } = useForm(null, false, validateInputs);
 
   const handleSubmit = () => {
-    // e.preventDefault()
-    // console.log(values);
     setConfirmDialog({
       ...confirmDialog,
       isOpen: false,
     });
+
     if (validateInputs()) {
       reportServices
-        .submitChecklist(values)
+        .submitChecklist(values, pictures, checklistType)
         .then((result) => {
           console.log(JSON.stringify(result.answers.checklistResponses));
           // calculateScore(result.answers.checklistResponses);
@@ -152,45 +151,43 @@ export default function ChecklistForm({ questions }) {
   const handleClearChecklist = () => {
     setConfirmDialog({
       ...confirmDialog,
-      isOpen: false
+      isOpen: false,
     });
     questions = [];
+    checklistType = 0;
     // setValues(null);
   };
 
   const createChecklistFields = () => {
-    var checklistFields = [];
-    var data = questions;
-    console.log(data);
-    data.map((category) => {
-      category.subcategories.map((subcategory) => {
-        if (subcategory !== null) {
-          subcategory.questions.map((item) => item["value"] = "");
-        }
-      })
-    });
+    let data = [];
 
-    // console.log(data);
-
-    questions.map((category) =>
-      category.subcategories.map((subcategory) => {
+    questions.map((category) => {
+      data.push({
+        categoryName: category.category,
+        weightage: category.weightage,
+        questions: [],
+      });
+      category.subcategories.forEach((subcategory) => {
         if (subcategory !== null) {
-          subcategory.questions.map((item) => {
-            checklistFields.push({
-              id: item.id,
-              value: "",
-            });
+          var lastItemIndex = data.length - 1;
+          subcategory.questions.forEach((item) => {
+            data[lastItemIndex].questions.push(item);
           });
         }
-      })
-    );
+      });
+    });
 
-    return checklistFields;
+    return data;
   };
 
-  const findAndReplace = (objectArray, id, value) => {
-    var elementToChange = objectArray.find((element) => element.id === id);
-    elementToChange.value = value;
+  const findAndReplace = (objectArray, selectedId, value) => {
+    objectArray.forEach((category) => {
+      category.questions.forEach((question) => {
+        if (question.id === selectedId) {
+          question.value = value;
+        }
+      })
+    })
     return objectArray;
   };
 
@@ -206,15 +203,20 @@ export default function ChecklistForm({ questions }) {
     });
   };
 
-  const getSelectValue = (item) => {
+  const getSelectValue = (itemId) => {
     if (values === null) return "";
     var responsesArray = values.checklistResponses;
 
+    var newValue = "";
+
     //TODO: Find a faster way to update the selected value
-    let selected = new Object(
-      responsesArray.find((element) => element.id === item)
-    );
-    return selected.value;
+    responsesArray.forEach((category) => {
+      category.questions.forEach((question) => {
+        if (question.id === itemId) newValue = question.value;
+      })
+    })
+
+    return newValue;
   };
 
   useEffect(() => {
@@ -246,8 +248,10 @@ export default function ChecklistForm({ questions }) {
           </div>
           {questions.map((category) => (
             <Grid sm={12}>
-              <Typography variant="h5">{category.category}</Typography>
-              <Typography variant="body1" className={classes.weightageLabel}>Weightage: {category.weightage}</Typography>
+              <Typography variant="h5">Section: {category.category}</Typography>
+              <Typography variant="body1" className={classes.weightageLabel}>
+                Weightage: {category.weightage}
+              </Typography>
               <div>
                 {category.subcategories.map((subcategory) => (
                   <div className={classes.subSection}>
@@ -313,11 +317,10 @@ export default function ChecklistForm({ questions }) {
                 subTitle: "Like really really sure?",
                 onConfirm: () => {
                   handleClearChecklist();
-                }
-               })
+                },
+              });
             }}
           />
-          <Controls.BackToTopButton/>
           <Notification notify={notify} setNotify={setNotify} />
           <ConfirmDialog
             confirmDialog={confirmDialog}
