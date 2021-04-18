@@ -9,6 +9,11 @@ export async function getQuestions(values) {
   );
 }
 
+export async function getQuestionTypes(values) {
+  const url = reqs.createUrl("/report/questions/types");
+  return await fetch(url, reqs.generateRequestData)
+}
+
 export async function submitChecklist(values) {
   const body = {
     auditor: localStorage.getItem("userId"),

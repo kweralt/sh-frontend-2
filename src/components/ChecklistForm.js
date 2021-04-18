@@ -82,7 +82,7 @@ export default function ChecklistForm({ questions }) {
 
   const handleSubmit = () => {
     // e.preventDefault()
-    console.log(values);
+    // console.log(values);
     setConfirmDialog({
       ...confirmDialog,
       isOpen: false,
@@ -91,7 +91,9 @@ export default function ChecklistForm({ questions }) {
       reportServices
         .submitChecklist(values)
         .then((result) => {
-          console.log(result);
+          console.log(JSON.stringify(result.answers.checklistResponses));
+          // calculateScore(result.answers.checklistResponses);
+
           // questions = [];
           setNotify({
             isOpen: true,
@@ -102,6 +104,50 @@ export default function ChecklistForm({ questions }) {
         .catch((err) => console.error(err));
     }
   };
+
+  const calculateScore = (data) => {
+    var value = "value";
+    var pshDemerit = 0;
+    var hgcDemerit = 0;
+    var fhDemerit = 0;
+    var hcDemerit = 0;
+    var wshDemerit = 0;
+
+    for (var i=0; i<13; i++){
+      // console.log(data[i][value]);
+      pshDemerit += parseInt(data[i][value]);
+    }
+    var pshScore = (13 - pshDemerit)/100*10;
+    console.log("PSH Score: " + pshScore + "/10");
+
+    for (var i=14; i<30; i++){
+      // console.log(parseInt(data[i][value]));
+      hgcDemerit += parseInt(data[i][value]);
+    }
+    var hgcScore = (15 - hgcDemerit)/100*20;
+    console.log("HGC Score: " + hgcScore + "/20");
+
+    for (var i=31; i<67; i++){
+      // console.log(parseInt(data[i][value]));
+      fhDemerit += parseInt(data[i][value]);
+    }
+    var fhScore = (37 - hgcDemerit)/100*35;
+    console.log("FH Score: " + fhScore + "/35");
+
+    for (var i=67; i<78; i++){
+      // console.log(parseInt(data[i][value]));
+      hcDemerit += parseInt(data[i][value]);
+    }
+    var hcScore = (11 - hcDemerit)/100*15;
+    console.log("HC Score: " + hcScore + "/15");
+
+    for (var i=78; i<96; i++){
+      // console.log(parseInt(data[i][value]));
+      hgcDemerit += parseInt(data[i][value]);
+    }
+    var wshScore = ( - wshDemerit)/100*20;
+    console.log("WSH Score: " + wshScore + "/20");
+  }
 
   const handleClearChecklist = () => {
     setConfirmDialog({
@@ -115,7 +161,7 @@ export default function ChecklistForm({ questions }) {
   const createChecklistFields = () => {
     var checklistFields = [];
     var data = questions;
-
+    console.log(data);
     data.map((category) => {
       category.subcategories.map((subcategory) => {
         if (subcategory !== null) {
@@ -124,7 +170,7 @@ export default function ChecklistForm({ questions }) {
       })
     });
 
-    console.log(data);
+    // console.log(data);
 
     questions.map((category) =>
       category.subcategories.map((subcategory) => {
@@ -217,6 +263,7 @@ export default function ChecklistForm({ questions }) {
                               label={item.question}
                               value={getSelectValue(item.id)}
                               onChange={handleChecklistSelect}
+                              
                               items={responseObject}
                               row={false}
                             />
