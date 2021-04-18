@@ -1,7 +1,6 @@
 import React from "react";
 import Tenants from "../pages/Tenants";
 import { render, screen, fireEvent } from "@testing-library/react";
-import { act } from "react-dom/test-utils";
 
 describe("Tenants table", () => {
   describe("test render all components", () => {
