@@ -177,8 +177,8 @@ export default function OutletForm(props) {
                 </Grid>
                 <Grid item lg={12}>
                     <div>
-                        <Controls.Button type="submit" text="Submit" />
-                        <Controls.Button text="Reset" color="default" onClick={resetForm} />
+                        <Controls.Button type="submit" text="Submit" name="submit"/>
+                        <Controls.Button text="Reset" color="default" onClick={resetForm} name="reset"/>
                     </div>
                 </Grid>
             </Grid>
