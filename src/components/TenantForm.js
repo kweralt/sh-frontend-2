@@ -91,7 +91,7 @@ export default function TenantForm(props) {
             error={errors.Password}
           />
           <div>
-            <Controls.Button type="submit" text="Submit" />
+            <Controls.Button type="submit" text="Submit" id="submitform"/>
             <Controls.Button text="Reset" color="default" onClick={resetForm} />
           </div>
         </Grid>
