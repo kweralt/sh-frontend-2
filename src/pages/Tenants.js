@@ -135,6 +135,7 @@ export default function Tenants() {
         <Paper className={classes.pageContent}>
           <Toolbar>
             <Controls.Input
+              id="searchtenants"
               label="Search Tenants"
               InputProps={{
                 startAdornment: (
@@ -146,6 +147,7 @@ export default function Tenants() {
               onChange={handleSearch}
             />
             <Controls.Button
+              id="addtenants"
               text="Add"
               variant="outlined"
               startIcon={<Add />}
