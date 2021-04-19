@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import {
@@ -29,13 +29,22 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-const PencentageUnresolved = ({ className, ...rest }) => {
+const PencentageUnresolved = ({ data }) => {
   const classes = useStyles();
+  const [percentage, setPercentage] = useState(0);
+
+  useEffect(() => {
+    if (data != null) {
+      let unresolvedPercent = parseFloat(data) * 100;
+      setPercentage(unresolvedPercent.toFixed(1));
+    }
+    else setPercentage(0);
+  }, [data]);
 
   return (
     <Card
-      className={clsx(classes.root, className)}
-      {...rest}
+      className={clsx(classes.root)}//, className)}
+      // {...rest}
     >
       <CardContent>
         <Grid
@@ -55,7 +64,7 @@ const PencentageUnresolved = ({ className, ...rest }) => {
               color="textPrimary"
               variant="h3"
             >
-              75.5%
+              {percentage}%
             </Typography>
           </Grid>
           <Grid item>
@@ -75,8 +84,8 @@ const PencentageUnresolved = ({ className, ...rest }) => {
   );
 };
 
-PencentageUnresolved.propTypes = {
-  className: PropTypes.string
-};
+// PencentageUnresolved.propTypes = {
+//   className: PropTypes.string
+// };
 
 export default PencentageUnresolved;

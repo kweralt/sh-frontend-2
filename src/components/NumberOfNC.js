@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import {
@@ -32,13 +32,23 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const NumberOfNC = ({ className, ...rest }) => {
+const NumberOfNC = ({ monthlyData }) => {
   const classes = useStyles();
+  const [data, setData] = useState({
+    currentAverage: 0,
+    differenceValue: 0
+  });
+
+  useEffect(() => {
+    if (monthlyData != null) {
+      setData(monthlyData);
+    }
+  }, [monthlyData]);
 
   return (
     <Card
-      className={clsx(classes.root, className)}
-      {...rest}
+      className={clsx(classes.root)}//, className)}
+      // {...rest}
     >
       <CardContent>
         <Grid
@@ -58,7 +68,7 @@ const NumberOfNC = ({ className, ...rest }) => {
               color="textPrimary"
               variant="h3"
             >
-              32
+              {data.currentAverage}
             </Typography>
           </Grid>
           <Grid item>
@@ -77,7 +87,7 @@ const NumberOfNC = ({ className, ...rest }) => {
             className={classes.differenceValue}
             variant="body2"
           >
-            16%
+            {data.change}%
           </Typography>
           <Typography
             color="textSecondary"
@@ -91,8 +101,8 @@ const NumberOfNC = ({ className, ...rest }) => {
   );
 };
 
-NumberOfNC.propTypes = {
-  className: PropTypes.string
-};
+// NumberOfNC.propTypes = {
+//   className: PropTypes.string
+// };
 
 export default NumberOfNC;

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Container,
   Grid,
@@ -14,6 +14,8 @@ import NumberOfNC from '../components/NumberOfNC';
 import NCPieChart from '../components/NCPieChart';
 import PageHeader from "../components/PageHeader";
 import ContentWrapper from "../components/ContentWrapper";
+import * as dashboardServices from "../services/dashboardServices";
+
 const useStyles = makeStyles((theme) => ({
   root: {
     backgroundColor: theme.palette.background.dark,
@@ -25,6 +27,16 @@ const useStyles = makeStyles((theme) => ({
 
 const Dashboard = () => {
   const classes = useStyles();
+  const [data, setData] = useState({});
+
+  useEffect(() => {
+    const getData = async () => {
+      const pageData = await dashboardServices.getDashboardData();
+      console.log(pageData);
+      setData(pageData);
+    }
+    getData();
+  }, []);
 
   return (
     <ContentWrapper>
@@ -45,7 +57,9 @@ const Dashboard = () => {
             xl={6}
             xs={12}
           >
-            <NumberOfNC />
+            <NumberOfNC 
+              monthlyData={data.monthlyAverageData}
+            />
           </Grid>
           <Grid
             item
@@ -54,9 +68,9 @@ const Dashboard = () => {
             xl={6}
             xs={12}
           >
-            <PencentageUnresolved />
+            <PencentageUnresolved data={data.unresolvedNCs} />
           </Grid>
-          <Grid
+          {/* <Grid
             item
             lg={12}
             md={12}
@@ -73,7 +87,7 @@ const Dashboard = () => {
             xs={12}
           >
             <NCPieChart />
-          </Grid>
+          </Grid> */}
           
           
           <Grid
@@ -83,7 +97,7 @@ const Dashboard = () => {
             xl={12}
             xs={12}
           >
-            <PendingUnresolved />
+            <PendingUnresolved data={data.nonComplianceRecords} />
           </Grid>
         </Grid>
       </Container>
