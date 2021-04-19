@@ -150,6 +150,7 @@ export default function Directory() {
                     <Toolbar>
                         <Controls.Input
                             label="Filter by outlet name"
+                            id="filtertext"
                             InputProps={{
                                 startAdornment: (
                                     <InputAdornment position="start">
@@ -161,6 +162,7 @@ export default function Directory() {
                         />
                         <Controls.Button
                             text="Add outlet"
+                            name="btnadd"
                             variant="outlined"
                             startIcon={<Add/>}
                             onClick={() => {
