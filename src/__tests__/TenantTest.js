@@ -3,7 +3,7 @@ const webdriver = require("selenium-webdriver"),
   By = webdriver.By,
   until = webdriver.until;
 
-(async function TenantAccountTest() {
+(async function TenantTest() {
   const driver = await new webdriver.Builder().forBrowser("firefox").build();
 
   // test 1: search tenant test
