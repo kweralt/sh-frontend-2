@@ -15,7 +15,7 @@ import ContentWrapper from "../components/ContentWrapper";
 import FormItem from "../components/FormItem";
 import Popup from "../components/Popup";
 import TenantSubmission from "../components/TenantSubmission";
-
+import { Link, useLocation } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -30,10 +30,9 @@ const useStyles = makeStyles((theme) => ({
 
 export default function TenantActions(){
     const classes = useStyles();
-    const [openPopup, setOpenPopup] = useState(false);
-    console.log("hey")
+    // const [openPopup, setOpenPopup] = useState(false);
     const onClick = () => {
-        setOpenPopup(true);
+        console.log("hey")
     }
 
     return (
@@ -49,16 +48,14 @@ export default function TenantActions(){
                             <FormItem 
                                 data={item}
                                 onClick={onClick}
+                                component={Link}
+                                to={{
+                                    pathname: "/tenant/submission",
+                                    state: item,
+                                }}
                             />))}
                     </List>
                 </Paper>
-                <Popup
-                    openPopup={openPopup}
-                    setOpenPopup={setOpenPopup}
-                    title={"Rectification Form"}
-                >
-                    <TenantSubmission/>
-                </Popup>
             </div>
         </ContentWrapper>
     )

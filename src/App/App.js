@@ -6,6 +6,8 @@ import Reports from "../pages/Reports";
 import Tenants from "../pages/Tenants";
 import Dashboard from "../pages/Dashboard";
 import Directory from "../pages/Directory";
+import TenantActions from "../pages/TenantActions";
+import TenantSubmission from "../components/TenantSubmission";
 // import Home from "../pages/Home";
 import Login from "../pages/Login";
 import useToken from "./useToken";
@@ -16,9 +18,9 @@ function App() {
   const { token, setToken } = useToken();
   // Login page rendered each time there is not a stored user token
   // display <Login /> when token==false, pass in setToken function to Login component
-  if (!token) {
-    return <Login setToken={setToken} />;
-  }
+  // if (!token) {
+  //   return <Login setToken={setToken} />;
+  // }
   return (
     <>
       <ThemeProvider theme={currentTheme}>
@@ -29,6 +31,12 @@ function App() {
               setCurrentTheme={setCurrentTheme}
             />
             <Switch>
+              <Route path="/actions">
+                <TenantActions/>
+              </Route>
+              <Route path="/tenant/submission">
+                <TenantSubmission/>
+              </Route>
               <Route path="/reports">
                 <Reports />
               </Route>
