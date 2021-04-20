@@ -1,17 +1,11 @@
-import React, { useEffect, useState } from 'react';
-import {
-  Container,
-  Grid,
-  makeStyles
-} from '@material-ui/core';
-import {
-  PeopleOutlineTwoTone,
-} from "@material-ui/icons";
-import PendingUnresolved from '../components/PendingUnresolved';
-import ScoreGraph from '../components/ScoreGraph';
-import PencentageUnresolved from '../components/PencentageUnresolved';
-import NumberOfNC from '../components/NumberOfNC';
-import NCPieChart from '../components/NCPieChart';
+import React, { useEffect, useState } from "react";
+import { Container, Grid, makeStyles } from "@material-ui/core";
+import SupervisorAccountTwoToneIcon from "@material-ui/icons/SupervisorAccountTwoTone";
+import PendingUnresolved from "../components/PendingUnresolved";
+// import ScoreGraph from "../components/ScoreGraph";
+import PencentageUnresolved from "../components/PencentageUnresolved";
+import NumberOfNC from "../components/NumberOfNC";
+// import NCPieChart from "../components/NCPieChart";
 import PageHeader from "../components/PageHeader";
 import ContentWrapper from "../components/ContentWrapper";
 import * as dashboardServices from "../services/dashboardServices";
@@ -19,10 +13,10 @@ import * as dashboardServices from "../services/dashboardServices";
 const useStyles = makeStyles((theme) => ({
   root: {
     backgroundColor: theme.palette.background.dark,
-    minHeight: '100%',
+    minHeight: "100%",
     paddingBottom: theme.spacing(3),
-    paddingTop: theme.spacing(3)
-  }
+    paddingTop: theme.spacing(3),
+  },
 }));
 
 const Dashboard = () => {
@@ -34,7 +28,7 @@ const Dashboard = () => {
       const pageData = await dashboardServices.getDashboardData();
       console.log(pageData);
       setData(pageData);
-    }
+    };
     getData();
   }, []);
 
@@ -42,35 +36,18 @@ const Dashboard = () => {
     <ContentWrapper>
       <div className={classes.root}>
         <PageHeader
-          title="Administrative Dashboard"
-          icon={<PeopleOutlineTwoTone fontSize="large" />}
+          title={"Audit Records for " + data.institution}
+          icon={<SupervisorAccountTwoToneIcon fontSize="large" />}
         />
-      <Container maxWidth={false}>
-        <Grid
-          container
-          spacing={3}
-        >
-          <Grid
-            item
-            lg={6}
-            sm={6}
-            xl={6}
-            xs={12}
-          >
-            <NumberOfNC 
-              monthlyData={data.ncCount}
-            />
-          </Grid>
-          <Grid
-            item
-            lg={6}
-            sm={6}
-            xl={6}
-            xs={12}
-          >
-            <PencentageUnresolved data={data.unresolvedNCs} />
-          </Grid>
-          {/* <Grid
+        <Container maxWidth={false}>
+          <Grid container spacing={3}>
+            <Grid item lg={6} sm={6} xl={6} xs={12}>
+              <NumberOfNC monthlyData={data.ncCount} />
+            </Grid>
+            <Grid item lg={6} sm={6} xl={6} xs={12}>
+              <PencentageUnresolved data={data.unresolvedNCs} />
+            </Grid>
+            {/* <Grid
             item
             lg={12}
             md={12}
@@ -88,21 +65,14 @@ const Dashboard = () => {
           >
             <NCPieChart />
           </Grid> */}
-          
-          
-          <Grid
-            item
-            lg={12}
-            md={12}
-            xl={12}
-            xs={12}
-          >
-            <PendingUnresolved data={data.nonComplianceRecords} />
+
+            <Grid item lg={12} md={12} xl={12} xs={12}>
+              <PendingUnresolved data={data.nonComplianceRecords} />
+            </Grid>
           </Grid>
-        </Grid>
-      </Container>
+        </Container>
       </div>
-      </ContentWrapper>
+    </ContentWrapper>
   );
 };
 
