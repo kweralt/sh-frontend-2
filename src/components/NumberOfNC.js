@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import clsx from 'clsx';
-import PropTypes from 'prop-types';
 import {
   Avatar,
   Box,
@@ -35,8 +34,8 @@ const useStyles = makeStyles((theme) => ({
 const NumberOfNC = ({ monthlyData }) => {
   const classes = useStyles();
   const [data, setData] = useState({
-    currentAverage: 0,
-    differenceValue: 0
+    currentCount: 0,
+    percentageChange: 0
   });
 
   useEffect(() => {
@@ -68,7 +67,7 @@ const NumberOfNC = ({ monthlyData }) => {
               color="textPrimary"
               variant="h3"
             >
-              {data.currentAverage}
+              {data.currentCount}
             </Typography>
           </Grid>
           <Grid item>
@@ -87,7 +86,7 @@ const NumberOfNC = ({ monthlyData }) => {
             className={classes.differenceValue}
             variant="body2"
           >
-            {data.change}%
+            {data.percentageChange}%
           </Typography>
           <Typography
             color="textSecondary"

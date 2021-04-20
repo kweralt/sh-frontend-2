@@ -63,7 +63,7 @@ export default function TenantForm(props) {
       setValues({
         ...recordForEdit,
       });
-  }, [recordForEdit]); // when recordForEdit changed, callback {setValues} invoked to populate form with current row details
+  }, [recordForEdit, setValues]); // when recordForEdit changed, callback {setValues} invoked to populate form with current row details
 
   return (
     <Form onSubmit={handleSubmit}>

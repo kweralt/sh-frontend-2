@@ -58,7 +58,7 @@ const Dashboard = () => {
             xs={12}
           >
             <NumberOfNC 
-              monthlyData={data.monthlyAverageData}
+              monthlyData={data.ncCount}
             />
           </Grid>
           <Grid

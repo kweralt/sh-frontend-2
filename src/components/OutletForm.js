@@ -97,29 +97,28 @@ export default function OutletForm(props) {
         }
     };
 
-    const getInstitutions = async () => {
-        const data = await directoryServices.getInstitutions();
-        const institutionData = changeJSONKeys(data.institutions);
-        setInstitutions(institutionData);
-    };
-
-    const getOutletTypes = async () => {
-        const data = await directoryServices.getOutletTypes();
-        const typesData = changeJSONKeys(data.data);
-        console.log(typesData);
-        setOutletTypes(typesData);
-    };
-
-    useEffect(async () => {
+    useEffect(() => {
+        const getInstitutions = async () => {
+            const data = await directoryServices.getInstitutions();
+            const institutionData = changeJSONKeys(data.institutions);
+            setInstitutions(institutionData);
+        };
         // alert(localStorage.getItem("userId"));
-        await getInstitutions();
-        await getOutletTypes();
+        getInstitutions();
+
+        const getOutletTypes = async () => {
+            const data = await directoryServices.getOutletTypes();
+            const typesData = changeJSONKeys(data.data);
+            console.log(typesData);
+            setOutletTypes(typesData);
+        };
+        getOutletTypes();
         if (recordForEdit != null) {
             setValues({
                 ...recordForEdit,
             });
         }
-    }, [recordForEdit]);
+    }, [recordForEdit, setValues]);
 
     return (
         <Form onSubmit={handleSubmit}>

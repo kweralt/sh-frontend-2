@@ -1,10 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import clsx from 'clsx';
-import moment from 'moment';
-import { v4 as uuid } from 'uuid';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import "react-perfect-scrollbar/dist/css/styles.css";
-import PropTypes from 'prop-types';
 import {
   Box,
   Button,
@@ -38,7 +35,7 @@ const PendingUnresolved = ({data}) => {
     if (data != null) {
       setOrders(data);
     }
-  }, []);
+  }, [data]);
 
   return (
     <Card
@@ -90,7 +87,8 @@ const PendingUnresolved = ({data}) => {
                     {order.outletid}
                   </TableCell>
                   <TableCell>
-                    {moment(order.reporteddate).format('YYYY-MM-DD')}
+                    {order.reporteddate}
+                    {/* {moment(order.reporteddate).format('YYYY-MM-DD')} */}
                   </TableCell>
                   <TableCell>
                     {order.isresolved ? (
