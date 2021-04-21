@@ -130,6 +130,7 @@ export default function Login({ setToken }) {
           className={classes.submit}
           type="submit"
           text="Sign In"
+          name="btnK"
         />
         {/* <Link href="#" variant="body2">
           Forgot password?
