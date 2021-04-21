@@ -24,12 +24,7 @@ const Dashboard = () => {
   const [data, setData] = useState({});
 
   useEffect(() => {
-    const getData = async () => {
-      const pageData = await dashboardServices.getDashboardData();
-      console.log(pageData.outletScores);
-      setData(pageData);
-    };
-    getData();
+    dashboardServices.getDashboardData().then((pageData) => setData(pageData));
   }, []);
 
   return (
@@ -37,7 +32,7 @@ const Dashboard = () => {
       <div className={classes.root}>
         <PageHeader
           title={"Audit Records for " + data.institution}
-          icon={<SupervisorAccountTwoToneIcon fontSize="large" />}
+          icon={<SupervisorAccountTwoToneIcon fontSize="medium" />}
         />
         <Container maxWidth={false}>
           <Grid container spacing={3}>
@@ -47,16 +42,10 @@ const Dashboard = () => {
             <Grid item lg={6} sm={6} xl={6} xs={12}>
               <PencentageUnresolved data={data.unresolvedNCs} />
             </Grid>
-            <Grid
-            item
-            lg={12}
-            md={12}
-            xl={12}
-            xs={12}
-          >
-            <ScoreGraph />
-          </Grid>
-          {/* <Grid
+            <Grid item lg={12} md={12} xl={12} xs={12}>
+              <ScoreGraph dataObjects={data.outletScores} />
+            </Grid>
+            {/* <Grid
             item
             lg={12}
             md={12}

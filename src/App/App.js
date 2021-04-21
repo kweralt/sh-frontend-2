@@ -10,9 +10,7 @@ import TenantDashboard from "../pages/TenantDashboard";
 // import Home from "../pages/Home";
 import Login from "../pages/Login";
 import useToken from "./useToken";
-import RouteWrapper from "../components/RouteWrapper"
-
-
+import RouteWrapper from "../components/RouteWrapper";
 
 function App() {
   const [currentTheme, setCurrentTheme] = useTheme();
@@ -50,17 +48,16 @@ function App() {
               <Route path="/tenants">
                 <Tenants />
               </Route>
-              <Route path="/" component={RouteWrapper}>
-              </Route>
               <Route path="/directory">
-                <Directory/>
+                <Directory />
               </Route>
+              <Route path="/" component={RouteWrapper}></Route>
             </Switch>
           </div>
         </Router>
       </ThemeProvider>
     </>
   );
-  }
+}
 
 export default App;

@@ -25,25 +25,22 @@ const ScoreGraph = ({ dataObjects }) => {
   const theme = useTheme();
   const [data, setData] = useState({});
 
-  // const data = {
-  //   datasets: [
-  //     {
-  //       backgroundColor: colors.indigo[500],
-  //       data: [81, 50, 91, 72, 92, 91, 80],
-  //       label: 'This Month'
-  //     },
-  //     {
-  //       backgroundColor: colors.grey[200],
-  //       data: [88, 70, 87, 92, 90, 87, 80],
-  //       label: 'Last Month'
-  //     }
-  //   ],
-  //   labels: ['Coffee Bean', 'Starbucks', 'Mr Bean', 'Florist 101', 'Hello World', 'Lorem Ipsum']
-  // };
-
   useEffect(() => {
+    let chartData = {
+      datasets: [{
+        backgroundColor: colors.indigo[500],
+        data: [],
+        label: 'Score'
+      }],
+      labels: [],
+    };
     if (dataObjects != null) {
-      setData(dataObjects);
+      console.log(dataObjects);
+      dataObjects.forEach((object) => {
+        chartData.datasets[0].data.push(object.score);
+        chartData.labels.push(object.outletname);
+      });
+      setData(chartData);
     }
   }, [dataObjects]);
 
@@ -108,15 +105,15 @@ const ScoreGraph = ({ dataObjects }) => {
       // {...rest}
     >
       <CardHeader
-        action={(
-          <Button
-            endIcon={<ArrowDropDownIcon />}
-            size="small"
-            variant="text"
-          >
-            View more months
-          </Button>
-        )}
+        // action={(
+        //   <Button
+        //     endIcon={<ArrowDropDownIcon />}
+        //     size="small"
+        //     variant="text"
+        //   >
+        //     View more months
+        //   </Button>
+        // )}
         title="Total Audit Score"
       />
       <Divider />
