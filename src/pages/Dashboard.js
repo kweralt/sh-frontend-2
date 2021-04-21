@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Container, Grid, makeStyles } from "@material-ui/core";
 import SupervisorAccountTwoToneIcon from "@material-ui/icons/SupervisorAccountTwoTone";
 import PendingUnresolved from "../components/PendingUnresolved";
-// import ScoreGraph from "../components/ScoreGraph";
+import ScoreGraph from "../components/ScoreGraph";
 import PencentageUnresolved from "../components/PencentageUnresolved";
 import NumberOfNC from "../components/NumberOfNC";
 // import NCPieChart from "../components/NCPieChart";
@@ -26,7 +26,7 @@ const Dashboard = () => {
   useEffect(() => {
     const getData = async () => {
       const pageData = await dashboardServices.getDashboardData();
-      console.log(pageData);
+      console.log(pageData.outletScores);
       setData(pageData);
     };
     getData();
@@ -47,7 +47,7 @@ const Dashboard = () => {
             <Grid item lg={6} sm={6} xl={6} xs={12}>
               <PencentageUnresolved data={data.unresolvedNCs} />
             </Grid>
-            {/* <Grid
+            <Grid
             item
             lg={12}
             md={12}
@@ -56,7 +56,7 @@ const Dashboard = () => {
           >
             <ScoreGraph />
           </Grid>
-          <Grid
+          {/* <Grid
             item
             lg={12}
             md={12}
