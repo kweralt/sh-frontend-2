@@ -1,9 +1,7 @@
-import React, { useState } from 'react';
-import clsx from 'clsx';
-import moment from 'moment';
-import { v4 as uuid } from 'uuid';
-import PerfectScrollbar from 'react-perfect-scrollbar';
-import PropTypes from 'prop-types';
+import React, { useEffect, useState } from "react";
+import clsx from "clsx";
+import PerfectScrollbar from "react-perfect-scrollbar";
+import "react-perfect-scrollbar/dist/css/styles.css";
 import {
   Box,
   Button,
@@ -18,147 +16,92 @@ import {
   TableRow,
   TableSortLabel,
   Tooltip,
-  makeStyles
-} from '@material-ui/core';
-import ArrowRightIcon from '@material-ui/icons/ArrowRight';
-
-const data = [
-  {
-    id: uuid(),
-    reportNumber: 'CDD1049',
-    customer: {
-      name: 'Coffee Bean'
-    },
-    createdAt: 1555016400000,
-    status: 'Pending'
-  },
-  {
-    id: uuid(),
-    reportNumber: 'CDD1048',
-    customer: {
-      name: 'Starbucks'
-    },
-    createdAt: 1555016400000,
-    status: 'Unresolved'
-  },
-  {
-    id: uuid(),
-    reportNumber: 'CDD1047',
-    customer: {
-      name: 'Mr Bean'
-    },
-    createdAt: 1554930000000,
-    status: 'Unresolved'
-  },
-  {
-    id: uuid(),
-    reportNumber: 'CDD1046',
-    customer: {
-      name: 'Florist 101'
-    },
-    createdAt: 1554757200000,
-    status: 'Unresolved'
-  },
-  {
-    id: uuid(),
-    reportNumber: 'CDD1045',
-    customer: {
-      name: 'Hello World'
-    },
-    createdAt: 1554670800000,
-    status: 'Pending'
-  },
-  {
-    id: uuid(),
-    reportNumber: 'CDD1044',
-    customer: {
-      name: 'Lorem Ipsum'
-    },
-    createdAt: 1554670800000,
-    status: 'Unresolved'
-  }
-];
+  makeStyles,
+} from "@material-ui/core";
+import ArrowRightIcon from "@material-ui/icons/ArrowRight";
 
 const useStyles = makeStyles(() => ({
   root: {},
   actions: {
-    justifyContent: 'flex-end'
-  }
+    justifyContent: "flex-end",
+  },
 }));
 
-const PendingUnresolved = ({ className, ...rest }) => {
+const tableHeaders = {
+  reportNumber: "Report Number",
+  reportType: "Report Type",
+  outletId: "Outlet Id",
+  outletName: "Outlet Name",
+  reportedOn: "Reported On",
+  score: "Score",
+  status: "Status",
+};
+
+const PendingUnresolved = ({ data }) => {
   const classes = useStyles();
-  const [orders] = useState(data);
+  const [orders, setOrders] = useState([]);
+
+  useEffect(() => {
+    if (data != null) {
+      setOrders(data);
+    }
+  }, [data]);
 
   return (
-    <Card
-      className={clsx(classes.root, className)}
-      {...rest}
-    >
-      <CardHeader title="PENDING AND UNRESOLVED" />
+    <Card className={clsx(classes.root)}>
+      <CardHeader title="Pending and unresolved non-compliances" />
       <Divider />
       <PerfectScrollbar>
-        <Box minWidth={800}>
-          <Table>
-            <TableHead>
-              <TableRow>
+        {/* <Box minWidth={800}>
+          
+        </Box> */}
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>{tableHeaders.reportNumber}</TableCell>
+              <TableCell>{tableHeaders.reportType}</TableCell>
+              <TableCell>{tableHeaders.outletId}</TableCell>
+              <TableCell>{tableHeaders.outletName}</TableCell>
+              <TableCell>{tableHeaders.score}</TableCell>
+              <TableCell sortDirection="desc">
+                <Tooltip enterDelay={300} title="Sort">
+                  <TableSortLabel active direction="desc">
+                    {tableHeaders.reportedOn}
+                  </TableSortLabel>
+                </Tooltip>
+              </TableCell>
+              <TableCell>{tableHeaders.status}</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {orders.map((order) => (
+              <TableRow hover key={order.reportid}>
+                <TableCell>{order.reportid}</TableCell>
+                <TableCell>{order.reporttype}</TableCell>
+                <TableCell>{order.outletid}</TableCell>
+                <TableCell>{order.outletname}</TableCell>
+                <TableCell>{order.score}</TableCell>
                 <TableCell>
-                  Report Number
+                  {order.reporteddate}
+                  {/* {moment(order.reporteddate).format('YYYY-MM-DD')} */}
                 </TableCell>
                 <TableCell>
-                  Customer
-                </TableCell>
-                <TableCell sortDirection="desc">
-                  <Tooltip
-                    enterDelay={300}
-                    title="Sort"
-                  >
-                    <TableSortLabel
-                      active
-                      direction="desc"
-                    >
-                      Date
-                    </TableSortLabel>
-                  </Tooltip>
-                </TableCell>
-                <TableCell>
-                  Status
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {orders.map((order) => (
-                <TableRow
-                  hover
-                  key={order.id}
-                >
-                  <TableCell>
-                    {order.reportNumber}
-                  </TableCell>
-                  <TableCell>
-                    {order.customer.name}
-                  </TableCell>
-                  <TableCell>
-                    {moment(order.createdAt).format('DD/MM/YYYY')}
-                  </TableCell>
-                  <TableCell>
+                  {order.isresolved ? (
                     <Chip
                       color="primary"
-                      label={order.status}
+                      label="Pending Approval"
                       size="small"
                     />
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </Box>
+                  ) : (
+                    <Chip color="default" label="Unresolved" size="small" />
+                  )}
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
       </PerfectScrollbar>
-      <Box
-        display="flex"
-        justifyContent="flex-end"
-        p={2}
-      >
+      <Box display="flex" justifyContent="flex-end" p={2}>
         <Button
           color="primary"
           endIcon={<ArrowRightIcon />}
@@ -172,8 +115,8 @@ const PendingUnresolved = ({ className, ...rest }) => {
   );
 };
 
-PendingUnresolved.propTypes = {
-  className: PropTypes.string
-};
+// PendingUnresolved.propTypes = {
+//   className: PropTypes.string
+// };
 
 export default PendingUnresolved;
