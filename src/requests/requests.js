@@ -25,18 +25,6 @@ export const generateRequestData = (requestMethod, bodyContent = null) => {
 };
 
 export const generateFormRequestData = (bodyContent) => {
-<<<<<<< HEAD
-    return {
-        mode: "cors",
-        method: "POST",
-        headers: {
-            "Access-Control-Allow-Origin": BASE_URL,
-        },
-        body: bodyContent
-    };
-}
-
-=======
   return {
     mode: "cors",
     method: "POST",
@@ -46,4 +34,3 @@ export const generateFormRequestData = (bodyContent) => {
     body: bodyContent,
   };
 };
->>>>>>> 220a451b273e7f0df8cb04036eed8ed92e312577
