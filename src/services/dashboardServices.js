@@ -9,3 +9,18 @@ export async function getDashboardData() {
     return response.json();
   });
 }
+
+export async function getScoresTableData(selectedDate) {
+  console.log(typeof(selectedDate), selectedDate);
+  const body = {
+    auditorId: localStorage.getItem("userId"),
+    month: selectedDate.getMonth() + 1,
+    year: selectedDate.getFullYear(),
+  };
+  console.log(body);
+  const url = reqs.createUrl("/dashboard/monthly");
+  return await fetch(
+    url,
+    reqs.generateRequestData("POST", body)
+  ).then((response) => response.json());
+}

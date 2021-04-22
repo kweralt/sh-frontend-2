@@ -24,7 +24,10 @@ const Dashboard = () => {
   const [data, setData] = useState({});
 
   useEffect(() => {
-    dashboardServices.getDashboardData().then((pageData) => setData(pageData));
+    dashboardServices.getDashboardData().then((pageData) => {
+      console.log(pageData);
+      setData(pageData);
+    });
   }, []);
 
   return (
@@ -43,7 +46,7 @@ const Dashboard = () => {
               <PencentageUnresolved data={data.unresolvedNCs} />
             </Grid>
             <Grid item lg={12} md={12} xl={12} xs={12}>
-              <ScoreGraph dataObjects={data.outletScores} />
+              <ScoreGraph dataObjects={data.monthlyScoresByType} />
             </Grid>
             {/* <Grid
             item
