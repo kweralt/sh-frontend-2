@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { Bar } from 'react-chartjs-2';
@@ -20,25 +20,29 @@ const useStyles = makeStyles(() => ({
   root: {}
 }));
 
-const ScoreGraph = ({ className, ...rest }) => {
+const ScoreGraph = ({ dataObjects }) => {
   const classes = useStyles();
   const theme = useTheme();
+  const [data, setData] = useState({});
 
-  const data = {
-    datasets: [
-      {
+  useEffect(() => {
+    let chartData = {
+      datasets: [{
         backgroundColor: colors.indigo[500],
-        data: [81, 50, 91, 72, 92, 91, 80],
-        label: 'This Month'
-      },
-      {
-        backgroundColor: colors.grey[200],
-        data: [88, 70, 87, 92, 90, 87, 80],
-        label: 'Last Month'
-      }
-    ],
-    labels: ['Coffee Bean', 'Starbucks', 'Mr Bean', 'Florist 101', 'Hello World', 'Lorem Ipsum']
-  };
+        data: [],
+        label: 'Score'
+      }],
+      labels: [],
+    };
+    if (dataObjects != null) {
+      console.log(dataObjects);
+      dataObjects.forEach((object) => {
+        chartData.datasets[0].data.push(object.score);
+        chartData.labels.push(object.outletname);
+      });
+      setData(chartData);
+    }
+  }, [dataObjects]);
 
   const options = {
     animation: false,
@@ -97,19 +101,19 @@ const ScoreGraph = ({ className, ...rest }) => {
 
   return (
     <Card
-      className={clsx(classes.root, className)}
-      {...rest}
+      className={clsx(classes.root)} //, className)}
+      // {...rest}
     >
       <CardHeader
-        action={(
-          <Button
-            endIcon={<ArrowDropDownIcon />}
-            size="small"
-            variant="text"
-          >
-            View more months
-          </Button>
-        )}
+        // action={(
+        //   <Button
+        //     endIcon={<ArrowDropDownIcon />}
+        //     size="small"
+        //     variant="text"
+        //   >
+        //     View more months
+        //   </Button>
+        // )}
         title="Total Audit Score"
       />
       <Divider />
@@ -143,8 +147,8 @@ const ScoreGraph = ({ className, ...rest }) => {
   );
 };
 
-ScoreGraph.propTypes = {
-  className: PropTypes.string
-};
+// ScoreGraph.propTypes = {
+//   className: PropTypes.string
+// };
 
 export default ScoreGraph;

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Container, Grid, makeStyles } from "@material-ui/core";
 import SupervisorAccountTwoToneIcon from "@material-ui/icons/SupervisorAccountTwoTone";
 import PendingUnresolved from "../components/PendingUnresolved";
-// import ScoreGraph from "../components/ScoreGraph";
+import ScoreGraph from "../components/ScoreGraph";
 import PencentageUnresolved from "../components/PencentageUnresolved";
 import NumberOfNC from "../components/NumberOfNC";
 // import NCPieChart from "../components/NCPieChart";
@@ -24,13 +24,7 @@ const Dashboard = () => {
   const [data, setData] = useState({});
 
   useEffect(() => {
-    const getData = async () => {
-      const pageData = await dashboardServices.getDashboardData();
-      console.log(pageData);
-      console.log(data);
-      setData(pageData);
-    };
-    getData();
+    dashboardServices.getDashboardData().then((pageData) => setData(pageData));
   }, []);
 
   return (
@@ -38,7 +32,7 @@ const Dashboard = () => {
       <div className={classes.root}>
         <PageHeader
           title={"Audit Records for " + data.institution}
-          icon={<SupervisorAccountTwoToneIcon fontSize="large" />}
+          icon={<SupervisorAccountTwoToneIcon fontSize="medium" />}
         />
         <Container maxWidth={false}>
           <Grid container spacing={3}>
@@ -48,16 +42,10 @@ const Dashboard = () => {
             <Grid item lg={6} sm={6} xl={6} xs={12}>
               <PencentageUnresolved data={data.unresolvedNCs} />
             </Grid>
+            <Grid item lg={12} md={12} xl={12} xs={12}>
+              <ScoreGraph dataObjects={data.outletScores} />
+            </Grid>
             {/* <Grid
-            item
-            lg={12}
-            md={12}
-            xl={12}
-            xs={12}
-          >
-            <ScoreGraph />
-          </Grid>
-          <Grid
             item
             lg={12}
             md={12}

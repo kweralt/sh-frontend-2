@@ -10,9 +10,7 @@ import TenantDashboard from "../pages/TenantDashboard";
 // import Home from "../pages/Home";
 import Login from "../pages/Login";
 import useToken from "./useToken";
-import RouteWrapper from "../components/RouteWrapper"
-
-
+import RouteWrapper from "../components/RouteWrapper";
 
 function App() {
   const [currentTheme, setCurrentTheme] = useTheme();
@@ -50,18 +48,25 @@ function App() {
               <Route path="/tenants">
                 <Tenants />
               </Route>
+<<<<<<< HEAD
               
+=======
+>>>>>>> 6a3bb1700d9a7089d847b6e911a4a6f2b7b724c1
               <Route path="/directory">
-                <Directory/>
+                <Directory />
               </Route>
+<<<<<<< HEAD
               <Route path="/" component={RouteWrapper}>
               </Route>
+=======
+              <Route path="/" component={RouteWrapper}></Route>
+>>>>>>> 6a3bb1700d9a7089d847b6e911a4a6f2b7b724c1
             </Switch>
           </div>
         </Router>
       </ThemeProvider>
     </>
   );
-  }
+}
 
 export default App;

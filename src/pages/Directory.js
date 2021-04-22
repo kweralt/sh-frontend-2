@@ -63,10 +63,8 @@ export default function Directory() {
     subTitle: "",
   });
 
-  const getRecords = async () => {
-    const data = await directoryServices.getOutlets();
-    console.log(data);
-    setRecords(data);
+  const getRecords = () => {
+    directoryServices.getOutlets().then((data) => setRecords(data));
   };
 
   useEffect(() => {

@@ -64,10 +64,8 @@ export default function Tenants() {
     subTitle: "",
   });
 
-  const getRecords = async () => {
-    const data = await tenantServices.getTenants();
-    // console.log(data);
-    setRecords(data.data);
+  const getRecords = () => {
+    tenantServices.getTenants().then((data) => setRecords(data.data));
   };
 
   useEffect(() => {
