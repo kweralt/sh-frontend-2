@@ -32,7 +32,6 @@ import * as dashboardServices from "../services/dashboardServices";
 import Popup from "../components/Popup";
 import Notification from "../components/Notification";
 import ConfirmDialog from "../components/ConfirmDialog";
-import { Button } from "selenium-webdriver";
 
 const useStyles = makeStyles((theme) => ({
   root: {

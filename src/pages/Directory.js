@@ -33,10 +33,9 @@ const useStyles = makeStyles((theme) => ({
 const headCells = [
   { id: "outletid", label: "Outlet Id" },
   { id: "outletName", label: "Outlet Name" },
-  { id: "institution", label: "Institution" },
   { id: "outletType", label: "Outlet Type" },
   { id: "unitNumber", label: "Unit Number" },
-  { id: "tenantEmail", label: "Tenant Email" },
+  { id: "tenantId", label: "Tenant Id" },
   { id: "tenancyStart", label: "Tenancy Start" },
   { id: "tenancyEnd", label: "Tenancy End" },
   { id: "actions", label: "Actions", disableSorting: true },
@@ -62,9 +61,14 @@ export default function Directory() {
     title: "",
     subTitle: "",
   });
+  const [institutionInfo, setInstitutionInfo] = useState({});
 
   const getRecords = () => {
-    directoryServices.getOutlets().then((data) => setRecords(data));
+    directoryServices.getOutlets().then((data) => {
+      console.log(data);
+      setRecords(data.outletRecords);
+      setInstitutionInfo(data.institutionInfo);
+    });
   };
 
   useEffect(() => {
@@ -128,7 +132,7 @@ export default function Directory() {
       <div className={classes.root}>
         <PageHeader
           title="Directory of Retail Outlets"
-          subTitle=""
+          subTitle={"For " + institutionInfo.name}
           icon={<Map fontSize="large" />}
         />
         <Paper className={classes.pageContent}>
@@ -163,10 +167,9 @@ export default function Directory() {
                 <TableRow key={item.outletid}>
                   <TableCell>{item.outletid}</TableCell>
                   <TableCell>{item.outletname}</TableCell>
-                  <TableCell>{item.institutionname}</TableCell>
                   <TableCell>{item.outlettypename}</TableCell>
                   <TableCell>{item.unitnumber}</TableCell>
-                  <TableCell>{item.email}</TableCell>
+                  <TableCell>{item.tenantid}</TableCell>
                   <TableCell>{item.tenancystart}</TableCell>
                   <TableCell>{item.tenancyend}</TableCell>
                   <TableCell>
@@ -206,7 +209,11 @@ export default function Directory() {
           setOpenPopup={setOpenPopUp}
           title={"Retail Outlet Form"}
         >
-          <OutletForm recordForEdit={recordForEdit} addOrEdit={addOrEdit} />
+          <OutletForm
+            recordForEdit={recordForEdit}
+            addOrEdit={addOrEdit}
+            institutionInfo={institutionInfo}
+          />
         </Popup>
         <Notification notify={notify} setNotify={setNotify} />
         <ConfirmDialog
