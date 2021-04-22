@@ -104,49 +104,6 @@ export default function Directory() {
     });
   };
 
-  const getRecords = async () => {
-    const data = await directoryServices.getOutlets();
-    console.log(data);
-    setRecords(data);
-  };
-
-  useEffect(() => {
-    getRecords();
-  }, []);
-
-  const {
-    TblContainer,
-    TblHead,
-    TblPagination,
-    recordsAfterPagingAndSorting,
-  } = useTable(records, headCells, filterFunction);
-
-  const handleSearch = (e) => {
-    let target = e.target;
-    setFilterFunction({
-      fn: (items) => {
-        if (target.value === "") return items;
-        else {
-          return items.filter((x) =>
-            x.outletname.toLowerCase().includes(target.value.toLowerCase())
-          );
-        }
-      },
-    });
-  };
-
-  const addOrEdit = (outlet, resetForm) => {
-    resetForm();
-    setRecordForEdit(null);
-    setOpenPopUp(false);
-    getRecords();
-    setNotify({
-      isOpen: true,
-      message: "Submitted successfully",
-      type: "success",
-    });
-  };
-
   const handleDelete = (outletId) => {
     setConfirmDialog({
       ...confirmDialog,
