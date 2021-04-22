@@ -50,10 +50,11 @@ function App() {
               <Route path="/tenants">
                 <Tenants />
               </Route>
-              <Route path="/" component={RouteWrapper}>
-              </Route>
+              
               <Route path="/directory">
                 <Directory/>
+              </Route>
+              <Route path="/" component={RouteWrapper}>
               </Route>
             </Switch>
           </div>

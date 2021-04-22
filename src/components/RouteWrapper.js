@@ -22,6 +22,7 @@ class RouteWrapper extends Component {
                 </Route>
             )
         }
+        console.log(localStorage);
         return (
             <Route path="/dashboard">
                 <TenantDashboard/>

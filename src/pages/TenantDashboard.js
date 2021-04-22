@@ -1,4 +1,6 @@
 import React from 'react';
+import { useEffect, useState } from "react";
+import * as dashboardServices from "../services/dashboardServices";
 import {
   Container,
   Grid,
@@ -24,7 +26,17 @@ const useStyles = makeStyles((theme) => ({
 
 const TenantDashboard = () => {
   const classes = useStyles();
+  const [data, setData] = useState({});
 
+  useEffect(() => {
+    const getData = async () => {
+      const pageData = await dashboardServices.getDashboardData();
+      console.log(pageData);
+      setData(pageData);
+      console.log(data);
+    };
+    getData();
+  }, []);
   return (
     <ContentWrapper>
       <div className={classes.root}>

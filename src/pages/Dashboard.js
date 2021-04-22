@@ -27,6 +27,7 @@ const Dashboard = () => {
     const getData = async () => {
       const pageData = await dashboardServices.getDashboardData();
       console.log(pageData);
+      console.log(data);
       setData(pageData);
     };
     getData();
