@@ -14,7 +14,7 @@ const FormItem = (props) => {
         >
             <ListItemText primary={'Audited By: '+ data.UserName} 
             secondary={'Reported On: '+ data.ReportedDate}/>
-            <Chip label={'Due '+ data.ResolveByDate} color='secondary'/>
+            <Chip label={'Due ' + data.ResolveByDate} color='primary'/>
         </ListItem>
     )
 }
