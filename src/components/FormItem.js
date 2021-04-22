@@ -4,22 +4,17 @@ import {
     ListItemText,
     Chip,
 } from "@material-ui/core";
-import { Link } from "react-router-dom";
-// import Controls from "../components/controls/Controls";
 
-const FormItem = ({data, onClick}) => {
+const FormItem = (props) => {
+    const data = props.data;
     return (
         <ListItem button 
-        onClick={onClick}
-        component={Link}
-        to={{
-            pathname: "/tenant/submission",
-            state: data,
-        }}
+        component = {props.component}
+        to = {props.to}
         >
-            <ListItemText primary={'Audited By: '+ data.auditor} 
-            secondary={'Due: '+ data.deadline}/>
-            <Chip label={data.phase} color='primary'/>
+            <ListItemText primary={'Audited By: '+ data.UserName} 
+            secondary={'Reported On: '+ data.ReportedDate}/>
+            <Chip label={'Due '+ data.ResolveByDate} color='secondary'/>
         </ListItem>
     )
 }

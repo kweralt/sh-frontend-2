@@ -3,9 +3,7 @@ import {
     makeStyles,
     Paper,
     List,
-    ListItem,
-    ListItemText,
-    Button,
+    Typography,
 } from "@material-ui/core";
 import {
     CallToAction,
@@ -13,9 +11,8 @@ import {
 import PageHeader from "../components/PageHeader";
 import ContentWrapper from "../components/ContentWrapper";
 import FormItem from "../components/FormItem";
-import Popup from "../components/Popup";
-import TenantSubmission from "../components/TenantSubmission";
 import { Link, useLocation } from "react-router-dom";
+import * as rectificationServices from "../services/rectificationServices";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -26,14 +23,27 @@ const useStyles = makeStyles((theme) => ({
         margin: theme.spacing(5),
         padding: theme.spacing(3),
     },
+    subTitle: {
+        paddingLeft: theme.spacing(4),
+        "& .MuiTypography-subtitle2": {
+            opacity: "0.6",
+    }},
 }));
 
 export default function TenantActions(){
     const classes = useStyles();
-    // const [openPopup, setOpenPopup] = useState(false);
-    const onClick = () => {
-        console.log("hey")
+    const [reports, setReports] = useState([]);
+    const id = 30;
+
+    const getReports = async () => {
+        const data = await rectificationServices.getUnresolvedNC(id);
+        setReports(data.data);
     }
+
+    useEffect(() => {
+        getReports();
+    }, []);
+
 
     return (
         <ContentWrapper>
@@ -42,29 +52,37 @@ export default function TenantActions(){
                     title="Tenant Action Center"
                     subTitle="Non-compliance Rectification"
                     icon={<CallToAction fontSize="large" />}/>
-                <Paper>
-                    <List>
-                        {tdata.map((item) => (
+                <Paper className={classes.pageContent}>
+                    {reports.length > 0 ? (<List>
+                        {reports.map((item) => (
                             <FormItem 
                                 data={item}
-                                onClick={onClick}
+                                key={item.reportId}
                                 component={Link}
                                 to={{
-                                    pathname: "/tenant/submission",
-                                    state: item,
+                                    pathname: "/tenants/submission",
+                                    state: item.NonComplianceId,
                                 }}
                             />))}
-                    </List>
+                    </List>) : 
+                    <div className={classes.subTitle}>
+                        <Typography variant="subtitle2" 
+                        component="div"
+                        align="center"
+                        opacity="0.6">
+                            You have no non-compliance to rectify. Well done!
+                        </Typography>
+                    </div>}
                 </Paper>
             </div>
         </ContentWrapper>
     )
 }
-
 const tdata = [
     {
         "formId": 0,
         "deadline": "11-04-2021",
+        "reportedOn": "06-04-2021",
         "auditor": "Kiawee",
         "phase": "Rectification Needed",
         "content": {
@@ -76,6 +94,7 @@ const tdata = [
     {
         "formId": 1,
         "deadline": "12-04-2021",
+        "reportedOn": "07-04-2021",
         "auditor": "Caryl",
         "phase": "Rectification Needed",
         "content": {
@@ -87,6 +106,7 @@ const tdata = [
     {
         "formId": 2,
         "deadline": "13-04-2021",
+        "reportedOn": "08-04-2021",
         "auditor": "Brandon",
         "phase": "Rectification Needed",
         "content": {

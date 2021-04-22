@@ -34,7 +34,7 @@ function App() {
               <Route path="/actions">
                 <TenantActions/>
               </Route>
-              <Route path="/tenant/submission">
+              <Route path="/tenants/submission">
                 <TenantSubmission/>
               </Route>
               <Route path="/reports">
