@@ -1,18 +1,21 @@
 import React, { useState } from "react";
 import ImageUploader from "react-images-upload";
+import Controls from "./controls/Controls";
+import * as reqs from "../requests/requests";
 
+//TODO: Add support for multiple image upload
 async function uploadImages(imageFiles) {
   const data = new FormData();
   for (const file of imageFiles) {
-    data.append("files[]", file, file.name);
+    data.append("image", file);
   }
-  // post with fetch to api upload endpoint
-  // return fetch("http://localhost:8080/endpoint", {
-  //   mode: "cors",
-  //   method: "POST",
-  //   headers: { "Content-Type": "application/json" },
-  //   body: data,
-  // });
+
+  const url = reqs.createUrl("/report/image/upload/test");
+  const reqParams = reqs.generateFormRequestData(data);
+
+  return await fetch(url, reqParams)
+  .then((response) => console.log(response.status))
+  .catch((er) => console.error(er));
 }
 
 export default function ExportImage(props) {
@@ -38,7 +41,8 @@ export default function ExportImage(props) {
         imgExtension={[".jpg", ".jpeg", ".gif", ".png"]}
         maxFileSize={5242880}
       />
-      <button onClick={handleSubmit}>Upload</button>
+      {/* <button onClick={handleSubmit}>Upload</button> */}
+      <Controls.Button type="upload" text="upload" onClick={handleSubmit}/>
     </form>
   );
 }

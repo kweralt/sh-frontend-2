@@ -37,6 +37,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const headCells = [
+  { id: "userId", label: "Tenant Id" },
   { id: "fullName", label: "Tenant Name" },
   { id: "email", label: "Email Address" },
   { id: "actions", label: "Actions", disableSorting: true },
@@ -63,11 +64,9 @@ export default function Tenants() {
     subTitle: "",
   });
 
-  const getRecords = async () => {
-    const data = await tenantServices.getTenants();
-    // console.log(data);
-    setRecords(data.data);
-  }
+  const getRecords = () => {
+    tenantServices.getTenants().then((data) => setRecords(data.data));
+  };
 
   useEffect(() => {
     getRecords();
@@ -162,6 +161,7 @@ export default function Tenants() {
             <TableBody>
               {recordsAfterPagingAndSorting().map((item) => (
                 <TableRow key={item.UserId}>
+                  <TableCell>{item.UserId}</TableCell>
                   <TableCell>{item.UserName}</TableCell>
                   <TableCell>{item.Email}</TableCell>
                   <TableCell>

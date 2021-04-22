@@ -4,7 +4,7 @@ import Controls from "./controls/Controls";
 import { useEffect, useState } from "react";
 import * as directoryServices from "../services/directoryServices";
 import dateRangeValidation from "../utils/dateRangeValidation";
-import _, {keys} from "underscore";
+import _ from "underscore";
 
 const initialFormValues = {
     institutionid: "",
@@ -97,27 +97,28 @@ export default function OutletForm(props) {
         }
     };
 
-    const getInstitutions = async () => {
-        const data = await directoryServices.getInstitutions();
-        const institutionData = changeJSONKeys(data.institutions);
-        setInstitutions(institutionData);
-    };
+    useEffect(() => {
+        const getInstitutions = async () => {
+            const data = await directoryServices.getInstitutions();
+            const institutionData = changeJSONKeys(data.institutions);
+            setInstitutions(institutionData);
+        };
+        // alert(localStorage.getItem("userId"));
+        getInstitutions();
 
-    const getOutletTypes = async () => {
-        const data = await directoryServices.getOutletTypes();
-        const typesData = changeJSONKeys(data.data);
-        setOutletTypes(typesData);
-    };
-
-    useEffect(async () => {
-        await getInstitutions();
-        await getOutletTypes();
+        const getOutletTypes = async () => {
+            const data = await directoryServices.getOutletTypes();
+            const typesData = changeJSONKeys(data.data);
+            console.log(typesData);
+            setOutletTypes(typesData);
+        };
+        getOutletTypes();
         if (recordForEdit != null) {
             setValues({
                 ...recordForEdit,
             });
         }
-    }, [recordForEdit]);
+    }, [recordForEdit, setValues]);
 
     return (
         <Form onSubmit={handleSubmit}>

@@ -1,103 +1,119 @@
-import React from "react";
-import Survey from "material-survey/components/Survey"
-import {
-  Container,
-  Grid,
-  makeStyles
-} from '@material-ui/core';
+import React, { useEffect, useState } from "react";
+import Survey from "material-survey/components/Survey";
+import { makeStyles } from "@material-ui/core";
+import AssignmentIcon from "@material-ui/icons/Assignment";
+import PageHeader from "../components/PageHeader";
 import ContentWrapper from "../components/ContentWrapper";
-
+import ChecklistForm from "../components/ChecklistForm";
+import Notification from "../components/Notification";
+import * as reportServices from "../services/reportServices";
 
 const useStyles = makeStyles((theme) => ({
   root: {
     backgroundColor: theme.palette.background.dark,
-    minHeight: '100%',
+    minHeight: "100%",
     paddingBottom: theme.spacing(3),
-    paddingTop: theme.spacing(3)
-  }
+    //paddingTop: theme.spacing(3),
+  },
+  checklistSelect: {
+    backgroundColor: theme.palette.background.default,
+    padding: theme.spacing(3, 0),
+  },
 }));
 
 const Reports = () => {
   const classes = useStyles();
+  const [currentChecklistType, setCurrentChecklistType] = useState(0);
+  const [checklistTypes, setChecklistTypes] = useState([]);
+  const [questions, setQuestions] = useState([]);
+  const [notify, setNotify] = useState({
+    isOpen: false,
+    messsage: "",
+    type: "",
+  });
+
+  const handleChecklistTypeSelected = (answers) => {
+    let selectedType = answers.checklistType;
+    var selectedTypeIndex;
+
+    //TODO: Figure out a better way to do this
+    for (var i = 0; i < checklistTypes.length; i++) {
+      if (checklistTypes[i] === selectedType) selectedTypeIndex = i + 1;
+    }
+
+    reportServices
+      .getQuestions(selectedTypeIndex)
+      .then((data) => {
+        setQuestions(data);
+        setCurrentChecklistType(selectedTypeIndex);
+        setNotify({
+          isOpen: true,
+          message: "Checklist type changed",
+          type: "success",
+        });
+      })
+      .catch((error) => {
+        console.error(error);
+        setQuestions([]);
+        setCurrentChecklistType(0);
+        setNotify({
+          isOpen: true,
+          message: "Cannot open checklist",
+          type: "error",
+        });
+      });
+  };
+
+  useEffect(() => {
+    reportServices
+      .getChecklistTypes()
+      .then((data) => {
+        let checklistTypesArray = [];
+        // console.log(data);
+
+        data.forEach((type) => {
+          checklistTypesArray.push(type.ChecklistName);
+        });
+        setChecklistTypes(checklistTypesArray);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  }, []);
 
   return (
     <ContentWrapper>
       <div className={classes.root}>
-      <Survey
-        form ={{
-          questions: [
-            {
-              name: "psh-qn1",
-              title: "Shop is open and ready to service patients/visitors according to operating hours.",
-              type: "boolean",
-            },
-            {
-              name: "psh-qn2",
-              title: "Staff Attendance: adequate staff for peak and non-peak hours.",
-              type: "boolean",
-            },
-            {
-              name: "psh-qn3",
-              title: "At least one (1) clearly assigned person in-charge on site.",
-              type: "boolean",
-            },
-            {
-              name: "psh-qn4",
-              title: "Staff who are unfit for work due to illness should not report to work).",
-              type: "boolean",
-            },
-            {
-              name: "psh-qn5",
-              title: "Staff who are fit for work but suffering from the lingering effects of a cough and/or cold should cover their mouths with a surgical mask.",
-              type: "boolean",
-            },
-            {
-              name: "psh-qn6",
-              title: "Clean clothes/uniform or aprons are worn during food preparation and food service.",
-              type: "boolean",
-            },
-            {
-              name: "psh-qn7",
-              title: "Hair is kept tidy (long hair must be tied up) and covered with clean caps or hair nets where appropriate.",
-              type: "boolean",
-            },
-            {
-              name: "psh-qn8",
-              title: "Sores, wounds or cuts on hands, if any, are covered with waterproof and brightly-coloured plaster.",
-              type: "boolean",
-            },
-            {
-              name: "psh-qn9",
-              title: "Hands are washed thoroughly with soap and water, frequently and at appropriate times.",
-              type: "boolean",
-            },
-            {
-              name: "psh-qn10",
-              title: "Fingernails are short, clean, unpolished and without nail accessories.",
-              type: "boolean",
-            },
-            {
-              name: "psh-qn11",
-              title: "Food is handled with clean utensils and gloves.",
-              type: "boolean",
-            },
-            {
-              name: "psh-qn12",
-              title: "Disposable gloves are changed regularly and/ or in between tasks.",
-              type: "boolean",
-            },
-            {
-              name: "psh-qn13",
-              title: "",
-              type: "boolean",
-            },
-          ]
-        }}
-      
-      />
+        <PageHeader
+          title="New Audit Report"
+          subTitle=""
+          icon={<AssignmentIcon fontSize="large" />}
+        />
+        <div className={classes.paper}>
+          <Survey
+            onFinish={handleChecklistTypeSelected}
+            form={{
+              questions: [
+                {
+                  name: "checklistType",
+                  title: "Select Checklist Type",
+                  type: "radiogroup",
+                  choices: checklistTypes,
+                },
+              ],
+            }}
+          />
+        </div>
+        <div>
+          <ChecklistForm
+            questions={questions}
+            checklistType={currentChecklistType}
+          />
+        </div>
+        <Notification notify={notify} setNotify={setNotify} />
       </div>
     </ContentWrapper>
-  )
-}
+  );
+};
 
-export default Reports
+export default Reports;

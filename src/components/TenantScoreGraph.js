@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { Bar } from 'react-chartjs-2';
@@ -20,29 +20,25 @@ const useStyles = makeStyles(() => ({
   root: {}
 }));
 
-const ScoreGraph = ({ dataObjects }) => {
+const TenantScoreGraph = ({ className, ...rest }) => {
   const classes = useStyles();
   const theme = useTheme();
-  const [data, setData] = useState({});
 
-  useEffect(() => {
-    let chartData = {
-      datasets: [{
-        backgroundColor: colors.indigo[500],
-        data: [],
+  const data = {
+    datasets: [
+      {
+        backgroundColor: colors.red[200],
+        data: [88, 70, 87, 92, 90, 87, 80, 90, 92, 88, 90, 96],
         label: 'Score'
-      }],
-      labels: [],
-    };
-    if (dataObjects != null) {
-      console.log(dataObjects);
-      dataObjects.forEach((object) => {
-        chartData.datasets[0].data.push(object.score);
-        chartData.labels.push(object.outletname);
-      });
-      setData(chartData);
-    }
-  }, [dataObjects]);
+      },
+      {
+        backgroundColor: colors.blue[200],
+        data: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+        label: 'No. of NCs'
+      }
+    ],
+    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+  };
 
   const options = {
     animation: false,
@@ -101,19 +97,19 @@ const ScoreGraph = ({ dataObjects }) => {
 
   return (
     <Card
-      className={clsx(classes.root)} //, className)}
-      // {...rest}
+      className={clsx(classes.root, className)}
+      {...rest}
     >
       <CardHeader
-        // action={(
-        //   <Button
-        //     endIcon={<ArrowDropDownIcon />}
-        //     size="small"
-        //     variant="text"
-        //   >
-        //     View more months
-        //   </Button>
-        // )}
+        action={(
+          <Button
+            endIcon={<ArrowDropDownIcon />}
+            size="small"
+            variant="text"
+          >
+            View more months
+          </Button>
+        )}
         title="Total Audit Score"
       />
       <Divider />
@@ -147,8 +143,8 @@ const ScoreGraph = ({ dataObjects }) => {
   );
 };
 
-// ScoreGraph.propTypes = {
-//   className: PropTypes.string
-// };
+TenantScoreGraph.propTypes = {
+  className: PropTypes.string
+};
 
-export default ScoreGraph;
+export default TenantScoreGraph;
