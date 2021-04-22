@@ -131,7 +131,7 @@ export default function Directory() {
           subTitle=""
           icon={<Map fontSize="large" />}
         />
-        <Paper>
+        <Paper className={classes.pageContent}>
           <Toolbar>
             <Controls.Input
               label="Filter by outlet name"
@@ -161,8 +161,9 @@ export default function Directory() {
             <TableBody>
               {recordsAfterPagingAndSorting().map((item) => (
                 <TableRow key={item.outletid}>
-                  <TableCell>{item.institutionname}</TableCell>
+                  <TableCell>{item.outletid}</TableCell>
                   <TableCell>{item.outletname}</TableCell>
+                  <TableCell>{item.institutionname}</TableCell>
                   <TableCell>{item.outlettypename}</TableCell>
                   <TableCell>{item.unitnumber}</TableCell>
                   <TableCell>{item.email}</TableCell>

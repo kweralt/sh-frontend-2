@@ -16,16 +16,23 @@ import {
   MuiPickersUtilsProvider,
 } from "@material-ui/pickers";
 import ContentWrapper from "../components/ContentWrapper";
-import { ArrowBack, GetAppOutlined, EmailOutlined } from "@material-ui/icons";
+import {
+  ArrowBack,
+  GetAppOutlined,
+  EmailOutlined,
+  Search,
+} from "@material-ui/icons";
 import Controls from "../components/controls/Controls";
 import useTable from "../components/useTable";
 import PageHeader from "../components/PageHeader";
 import AssessmentIcon from "@material-ui/icons/Assessment";
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 import DateFnsUtils from "@date-io/date-fns";
 import * as dashboardServices from "../services/dashboardServices";
-import { Form } from "../components/useForm";
-import Button from "@material-ui/core/Button";
+import Popup from "../components/Popup";
+import Notification from "../components/Notification";
+import ConfirmDialog from "../components/ConfirmDialog";
+import { Button } from "selenium-webdriver";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -38,10 +45,17 @@ const useStyles = makeStyles((theme) => ({
   },
   datePicker: {
     maxWidth: "50%",
+    marginTop: theme.spacing(2),
   },
   formContent: {
     margin: theme.spacing(2),
     padding: theme.spacing(2),
+  },
+  actionButton: {
+    margin: theme.spacing(1),
+  },
+  toolBar: {
+    marginTop: theme.spacing(1),
   },
 }));
 
@@ -61,6 +75,11 @@ export default function OutletScores() {
   const classes = useStyles();
   const [records, setRecords] = useState([]);
   const [selectedDate, setSelectedDate] = useState(new Date());
+  const [notify, setNotify] = useState({
+    isOpen: false,
+    messsage: "",
+    type: "",
+  });
   const [filterFunction, setFilterFunction] = useState({
     fn: (items) => {
       return items;
@@ -71,9 +90,59 @@ export default function OutletScores() {
     setSelectedDate(date);
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log(selectedDate);
+  const handleSearch = (e) => {
+    let target = e.target;
+    setFilterFunction({
+      fn: (items) => {
+        if (target.value === "") return items;
+        else {
+          return items.filter((x) =>
+            x.outletid.toString().includes(target.value)
+          );
+        }
+      },
+    });
+  };
+
+  const handleExport = (reportId) => {
+    dashboardServices.downloadExcelReport(reportId)
+    .then((status) => {
+      console.log(status);
+      if (status === 200) {
+        setNotify({
+          isOpen: true,
+          message: "Report downloaded successfully",
+          type: "success"
+        });
+      } else {
+        setNotify({
+          isOpen: true,
+          message: "Error downloading report",
+          type: "error"
+        })
+      }
+    });
+  };
+
+  const handleEmail = (reportId) => {
+    console.log("Email report id ", reportId);
+    dashboardServices.emailExcelReport(reportId)
+    .then((status) => {
+      console.log(status);
+      if (status === 200) {
+        setNotify({
+          isOpen: true,
+          message: "Report sent successfully",
+          type: "success"
+        });
+      } else {
+        setNotify({
+          isOpen: true,
+          message: "Error sending report",
+          type: "error"
+        });
+      }
+    })
   };
 
   const {
@@ -100,27 +169,47 @@ export default function OutletScores() {
         >
           <IconButton component={Link} to="/dashboard">
             <ArrowBack fontSize="medium" />
+            <Typography variant="body1">  Back to dashboard</Typography>
           </IconButton>
-          <Typography variant="body2">Back to dashboard</Typography>
         </Grid>
         <PageHeader
           title="View audit scores"
           subTitle="View by month and year"
           icon={<AssessmentIcon />}
         />
-        <Paper>
+        <Paper className={classes.pageContent}>
           <Toolbar>
-            <MuiPickersUtilsProvider utils={DateFnsUtils}>
-              <KeyboardDatePicker
-                autoOk
-                variant="inline"
-                inputVariant="outlined"
-                openTo="year"
-                views={["year", "month"]}
-                onChange={handleDateChange}
-                value={selectedDate}
+            <Grid
+              container
+              direction="row"
+              justify="space-between"
+              alignItems="flex-start"
+            >
+              <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                <KeyboardDatePicker
+                  autoOk
+                  variant="inline"
+                  inputVariant="outlined"
+                  openTo="year"
+                  label="Select year and month to view records"
+                  views={["year", "month"]}
+                  onChange={handleDateChange}
+                  value={selectedDate}
+                />
+              </MuiPickersUtilsProvider>
+              <Controls.Input
+                label="Filter by outlet Id"
+                id="filtertext"
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="start">
+                      <Search />
+                    </InputAdornment>
+                  ),
+                }}
+                onChange={handleSearch}
               />
-            </MuiPickersUtilsProvider>
+            </Grid>
           </Toolbar>
           <TblContainer>
             <TblHead />
@@ -136,10 +225,18 @@ export default function OutletScores() {
                   <TableCell>{item.auditorid}</TableCell>
                   <TableCell>{item.auditorname}</TableCell>
                   <TableCell>
-                    <Controls.ActionButton color="primary">
+                    <Controls.ActionButton
+                      color="primary"
+                      onClick={() => {
+                        handleExport(item.reportid);
+                      }}
+                    >
                       <GetAppOutlined fontSize="small" />
                     </Controls.ActionButton>
-                    <Controls.ActionButton color="secondary">
+                    <Controls.ActionButton
+                      color="secondary"
+                      onClick={() => handleEmail(item.reportid)}
+                    >
                       <EmailOutlined fontSize="small" />
                     </Controls.ActionButton>
                   </TableCell>
@@ -149,6 +246,7 @@ export default function OutletScores() {
             <TblPagination />
           </TblContainer>
         </Paper>
+        <Notification notify={notify} setNotify={setNotify} />
       </div>
     </ContentWrapper>
   );
