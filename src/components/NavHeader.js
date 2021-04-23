@@ -67,6 +67,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+function roleValidation() {
+  var isAuditor = false;
+  if (localStorage.getItem("roleId") == 1) {
+    isAuditor = true;
+  }
+  console.log(isAuditor);
+  return isAuditor;
+}
 
 function Header(props) {
   const { container } = props;
@@ -80,18 +88,25 @@ function Header(props) {
     setMobileOpen(!mobileOpen);
   };
 
+  let navList = [
+    { text: "home", icon: "home" },
+    { text: "dashboard", icon: "dashboard" },
+  ];
+
+  if (roleValidation()) {
+    navList.push({ text: "reports", icon: "assignment" });
+    navList.push({ text: "tenants", icon: "person" });
+    navList.push({ text: "directory", icon: "map" });
+  } else {
+    navList.push({ text: "actions", icon: "work" });
+  }
+
   const drawer = (
     <div>
       <div className={classes.toolbar} />
       <Divider />
       <List>
-        {[
-          { text: "home", icon: "home" },
-          { text: "reports", icon: "assignment" },
-          { text: "tenants", icon: "person" },
-          { text: "dashboard", icon: "dashboard" },
-          { text: "directory", icon: "map" }
-        ].map(({ text, icon }, index) => (
+        {navList.map(({ text, icon }, index) => (
           <ListItem
             component={RouterLink}
             // selected={pathname === `/${text}`}
@@ -151,7 +166,9 @@ function Header(props) {
           <IconButton color="inherit">
             <ChatBubbleOutline fontSize="small" />
           </IconButton>
-          <Logout />
+          <IconButton color="inherit" edge="end">
+            <PowerSettingsNew fontSize="small" />
+          </IconButton>
         </Toolbar>
       </AppBar>
       {isHome && !mobileOpen ? (

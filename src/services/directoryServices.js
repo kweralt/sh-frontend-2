@@ -1,24 +1,26 @@
 import * as reqs from "../requests/requests";
 
 export async function getOutlets() {
-  const url = reqs.createUrl("/directory/outlets");
-  return await fetch(
-    url,
-    reqs.generateRequestData("GET")
-  ).then((response) => response.json());
+  const auditorId = localStorage.getItem("userId");
+  const url = reqs.createUrl(`/directory/outlets/${auditorId}`);
+  return await fetch(url, reqs.generateRequestData("GET")).then((response) =>
+    response.json()
+  );
 }
 
-export async function addOutlet(values) {
-  console.log(values);
+export async function addOutlet(values, institutionId) {
+  const insertValues = {
+    ...values,
+    institutionid: institutionId,
+  };
   const url = reqs.createUrl("/directory/outlets/add");
   return await fetch(
     url,
-    reqs.generateRequestData("PUT", values)
+    reqs.generateRequestData("PUT", insertValues)
   ).then((response) => response.json());
 }
 
 export async function updateOutlet(values) {
-  console.log(values);
   const url = reqs.createUrl("/directory/outlets/update");
   return await fetch(
     url,

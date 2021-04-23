@@ -23,7 +23,7 @@ export async function submitChecklist(report, images, checklistType, score) {
   form.append("score", score);
   form.append("date", new Date());
   form.append("auditorId", localStorage.getItem("userId"));
-  form.append("checklistTypeId", checklistType)
+  form.append("checklistTypeId", checklistType);
 
   for (var i = 0; i < images.length; i++) {
     form.append("images", images[i]);
