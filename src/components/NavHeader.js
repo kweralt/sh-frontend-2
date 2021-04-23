@@ -85,6 +85,7 @@ function Header(props) {
       <Divider />
       <List>
         {[
+          { text: "actions", icon: "work"},
           { text: "home", icon: "home" },
           { text: "reports", icon: "assignment" },
           { text: "tenants", icon: "person" },
