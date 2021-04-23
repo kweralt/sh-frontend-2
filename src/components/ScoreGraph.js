@@ -15,6 +15,7 @@ import {
 } from '@material-ui/core';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import ArrowRightIcon from '@material-ui/icons/ArrowRight';
+import {Link} from "react-router-dom";
 
 const useStyles = makeStyles(() => ({
   root: {}
@@ -35,10 +36,10 @@ const ScoreGraph = ({ dataObjects }) => {
       labels: [],
     };
     if (dataObjects != null) {
-      console.log(dataObjects);
+      // console.log(dataObjects);
       dataObjects.forEach((object) => {
-        chartData.datasets[0].data.push(object.score);
-        chartData.labels.push(object.outletname);
+        chartData.datasets[0].data.push(object.average);
+        chartData.labels.push(object.reportType);
       });
       setData(chartData);
     }
@@ -114,7 +115,7 @@ const ScoreGraph = ({ dataObjects }) => {
         //     View more months
         //   </Button>
         // )}
-        title="Total Audit Score"
+        title="Average Monthly Audit Scores"
       />
       <Divider />
       <CardContent>
@@ -139,6 +140,8 @@ const ScoreGraph = ({ dataObjects }) => {
           endIcon={<ArrowRightIcon />}
           size="small"
           variant="text"
+          component={Link}
+          to="/outletscores"
         >
           Overview
         </Button>

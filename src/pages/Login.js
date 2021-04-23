@@ -20,22 +20,22 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
   },
   logo: {
-    width: "15%",
-    height: "15%",
+    width: "75px",
+    height: "75px",
     marginBottom: theme.spacing(3),
   },
   form: {
     width: "100%", // IE 11
-    marginTop: theme.spacing(1),
+    margin: theme.spacing(1, 0),
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",
   },
   input: {
-    maxWidth: "500px", //TODO: Figure out best width for the input fields
+    maxWidth: "500px",
     minWidth: "250px",
-    // margin: theme.spacing(2, 2, 2)
+    margin: theme.spacing(2, 4),
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
@@ -95,10 +95,12 @@ export default function Login({ setToken }) {
       await loginUser(values)
         .then((data) => {
           if (data.status === 200) {
+            // console.log(data.user);
             localStorage.setItem("userId", data.user.id);
             localStorage.setItem("roleId", data.user.role);
             localStorage.setItem("userName", data.user.name);
             setToken(data);
+            window.location.replace("http://localhost:3000/dashboard");
           } else {
             setNotify({
               isOpen: true,
@@ -122,44 +124,44 @@ export default function Login({ setToken }) {
     <div className={classes.root}>
       <Grid className={classes.paper}>
         <img className={classes.logo} src={logo} />
-        <Typography variant="h5">
+        <Typography variant="h5" align="center">
           Auditing Platform and Retail Service Management
         </Typography>
       </Grid>
       <Form className={classes.form} onSubmit={handleSubmit}>
         <Typography variant="h6">Sign In</Typography>
-        <Controls.Input
-          className={classes.input}
-          type="text"
-          variant="outlined"
-          margin="normal"
-          required
-          fullWidth
-          id="email"
-          label="Email Address"
-          name="email"
-          autoComplete="email"
-          autoFocus
-          value={values.email}
-          onChange={handleInputChange}
-          error={errors.email}
-        />
-        <Controls.Input
-          className={classes.input}
-          type="password"
-          variant="outlined"
-          margin="normal"
-          required
-          fullWidth
-          id="password"
-          label="Password"
-          name="password"
-          autoComplete="current-password"
-          autoFocus
-          values={values.password}
-          onChange={handleInputChange}
-          error={errors.password}
-        />
+        <div className={classes.input}>
+          <Controls.Input
+            type="text"
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            id="email"
+            label="Email Address"
+            name="email"
+            autoComplete="email"
+            autoFocus
+            value={values.email}
+            onChange={handleInputChange}
+            error={errors.email}
+          />
+          <Controls.Input
+            type="password"
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            id="password"
+            label="Password"
+            name="password"
+            autoComplete="current-password"
+            autoFocus
+            values={values.password}
+            onChange={handleInputChange}
+            error={errors.password}
+          />
+        </div>
         {/* <FormControlLabel
           control={<Checkbox value="remember" color="primary" />}
           label="Remember me"

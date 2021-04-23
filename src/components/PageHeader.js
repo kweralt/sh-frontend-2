@@ -1,4 +1,4 @@
-import { Paper, Card, Typography, makeStyles } from "@material-ui/core";
+import { Paper, Card, Typography, makeStyles, Icon } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -14,6 +14,8 @@ const useStyles = makeStyles((theme) => ({
     display: "inline-block",
     padding: theme.spacing(2),
     color: "#3c44b1",
+    display: "flex",
+    alignItems: "center",
   },
   pageTitle: {
     paddingLeft: theme.spacing(4),

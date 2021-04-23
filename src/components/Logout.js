@@ -12,7 +12,7 @@ class Logout extends Component {
     logout = () => {
         sessionStorage.clear("token");
         this.setState({navigate: true});
-        window.location.reload(false);
+        window.location.replace("http://localhost:3000/");
     }
     render() {
         let { navigate } = this.state;

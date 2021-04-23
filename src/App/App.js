@@ -6,7 +6,9 @@ import Reports from "../pages/Reports";
 import Tenants from "../pages/Tenants";
 // import Dashboard from "../pages/Dashboard";
 import Directory from "../pages/Directory";
-// import TenantDashboard from "../pages/TenantDashboard";
+import TenantActions from "../pages/TenantActions";
+import TenantSubmission from "../components/TenantSubmission";
+import TenantDashboard from "../pages/TenantDashboard";
 // import Home from "../pages/Home";
 import Login from "../pages/Login";
 import useToken from "./useToken";
@@ -34,6 +36,12 @@ function App() {
               setCurrentTheme={setCurrentTheme}
             />
             <Switch>
+              <Route path="/actions">
+                <TenantActions/>
+              </Route>
+              <Route path="/tenants/submission">
+                <TenantSubmission/>
+              </Route>
               <Route path="/reports">
                 <Reports />
               </Route>
