@@ -1,7 +1,7 @@
 import * as reqs from "../requests/requests";
 
 export async function getUnresolvedNC(tenantId) {
-  console.log(tenantId);
+  // console.log(tenantId);
   const url = reqs.createUrl(`/actions/unresolved/${parseInt(tenantId)}`);
   return await fetch(url, reqs.generateRequestData("GET"))
     .then((response) => { return response.json()});

@@ -12,9 +12,9 @@ const FormItem = (props) => {
         component = {props.component}
         to = {props.to}
         >
-            <ListItemText primary={'Audited By: '+ data.UserName} 
-            secondary={'Reported On: '+ data.ReportedDate}/>
-            <Chip label={'Due ' + data.ResolveByDate} color='primary'/>
+            <ListItemText primary={'Audited By: '+ data.auditedby} 
+            secondary={data.reporttype + ' Report'}/>
+            <Chip label={'Due ' + data.deadline} color='primary'/>
         </ListItem>
     )
 }

@@ -95,6 +95,7 @@ export default function Login({ setToken }) {
       await loginUser(values)
         .then((data) => {
           if (data.status === 200) {
+            // console.log(data.user);
             localStorage.setItem("userId", data.user.id);
             localStorage.setItem("roleId", data.user.role);
             localStorage.setItem("userName", data.user.name);

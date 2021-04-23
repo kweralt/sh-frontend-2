@@ -35,14 +35,14 @@ export default function TenantActions(){
     const [reports, setReports] = useState([]);
     const id = localStorage.getItem("userId");
 
-    const getReports = async () => {
-        const data = await rectificationServices.getUnresolvedNC(id);
-        setReports(data.data);
-    }
 
     useEffect(() => {
-        getReports();
-    }, []);
+        rectificationServices.getUnresolvedNC(id)
+        .then((data) => {
+            // console.log(data);
+            setReports(data.data);
+        });
+    }, [id]);
 
 
     return (
@@ -57,11 +57,11 @@ export default function TenantActions(){
                         {reports.map((item) => (
                             <FormItem 
                                 data={item}
-                                key={item.reportId}
+                                key={item.ncid}
                                 component={Link}
                                 to={{
                                     pathname: "/tenants/submission",
-                                    state: item.NonComplianceId,
+                                    state: item.ncid,
                                 }}
                             />))}
                     </List>) : 
@@ -78,41 +78,3 @@ export default function TenantActions(){
         </ContentWrapper>
     )
 }
-const tdata = [
-    {
-        "formId": 0,
-        "deadline": "11-04-2021",
-        "reportedOn": "06-04-2021",
-        "auditor": "Kiawee",
-        "phase": "Rectification Needed",
-        "content": {
-            "safety": false,
-            "health": true,
-            "notes": "abcdef"
-        }
-    },
-    {
-        "formId": 1,
-        "deadline": "12-04-2021",
-        "reportedOn": "07-04-2021",
-        "auditor": "Caryl",
-        "phase": "Rectification Needed",
-        "content": {
-            "safety": false,
-            "health": false,
-            "notes": "qwerty"
-        }
-    },
-    {
-        "formId": 2,
-        "deadline": "13-04-2021",
-        "reportedOn": "08-04-2021",
-        "auditor": "Brandon",
-        "phase": "Rectification Needed",
-        "content": {
-            "safety": false,
-            "health": true,
-            "notes": "yuiop"
-        }
-    }
-]
