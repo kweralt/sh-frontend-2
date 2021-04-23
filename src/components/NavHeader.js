@@ -166,9 +166,10 @@ function Header(props) {
           <IconButton color="inherit">
             <ChatBubbleOutline fontSize="small" />
           </IconButton>
-          <IconButton color="inherit" edge="end">
+          {/* <IconButton color="inherit" edge="end">
             <PowerSettingsNew fontSize="small" />
-          </IconButton>
+          </IconButton> */}
+          <Logout/>
         </Toolbar>
       </AppBar>
       {isHome && !mobileOpen ? (

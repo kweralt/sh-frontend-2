@@ -7,7 +7,7 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
 function roleValidation() {
   var isAuditor = false;
-  if (localStorage.getItem("roleId") === 1) {
+  if (localStorage.getItem("roleId") == "1") {
     isAuditor = true;
   }
   console.log(isAuditor);

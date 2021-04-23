@@ -36,7 +36,7 @@ const Dashboard = () => {
       <div className={classes.root}>
         <PageHeader
           title={"Audit Records for " + data.institution}
-          icon={<SupervisorAccountTwoToneIcon fontSize="medium" />}
+          icon={<SupervisorAccountTwoToneIcon fontSize="large" />}
         />
         <Container maxWidth={false}>
           <Grid container spacing={3}>
@@ -49,16 +49,6 @@ const Dashboard = () => {
             <Grid item lg={12} md={12} xl={12} xs={12}>
               <ScoreGraph dataObjects={data.monthlyScoresByType} />
             </Grid>
-            {/* <Grid
-            item
-            lg={12}
-            md={12}
-            xl={12}
-            xs={12}
-          >
-            <NCPieChart />
-          </Grid> */}
-
             <Grid item lg={12} md={12} xl={12} xs={12}>
               <PendingUnresolved data={data.nonComplianceRecords} />
             </Grid>
