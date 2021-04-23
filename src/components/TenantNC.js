@@ -48,6 +48,11 @@ const TenantNC = ({ className, ...rest }) => {
           spacing={3}
         >
           <Grid item>
+            <Avatar className={classes.avatar}>
+              <Warning />
+            </Avatar>
+          </Grid>
+          <Grid item>
             <Typography
               color="textSecondary"
               gutterBottom
@@ -55,18 +60,14 @@ const TenantNC = ({ className, ...rest }) => {
             >
               You have 4 outstanding Non-Compliances.
             </Typography>
-            <Typography
+            {/* <Typography
               color="textPrimary"
               variant="h3"
             >
               32
-            </Typography>
+            </Typography> */}
           </Grid>
-          <Grid item>
-            <Avatar className={classes.avatar}>
-              <Warning />
-            </Avatar>
-          </Grid>
+          
         </Grid>
         <Box
           mt={2}

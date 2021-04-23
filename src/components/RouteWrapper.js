@@ -1,5 +1,6 @@
 import { Component } from "react";
 import Dashboard from "../pages/Dashboard";
+import TestDashboard from "../pages/TestDashboard";
 import TenantDashboard from "../pages/TenantDashboard";
 import OutletScores from "../pages/OutletScores";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";

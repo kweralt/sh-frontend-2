@@ -2,6 +2,7 @@ import { saveAs } from "file-saver";
 import * as reqs from "../requests/requests";
 
 export async function getDashboardData() {
+  console.log(localStorage);
   let auditorId = localStorage.getItem("userId");
   const url = reqs.createUrl(`/dashboard/${auditorId}`);
 

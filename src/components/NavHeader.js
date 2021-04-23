@@ -27,6 +27,7 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
 import useToken from "../App/useToken";
 import Login from "../pages/Login";
+import Logout from "./Logout";
 export const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({

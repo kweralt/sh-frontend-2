@@ -4,7 +4,7 @@ import { ThemeProvider } from "@material-ui/core/styles";
 import { useTheme } from "../theme";
 import Reports from "../pages/Reports";
 import Tenants from "../pages/Tenants";
-import Dashboard from "../pages/Dashboard";
+// import Dashboard from "../pages/Dashboard";
 import Directory from "../pages/Directory";
 import TenantActions from "../pages/TenantActions";
 import TenantSubmission from "../components/TenantSubmission";
@@ -26,14 +26,6 @@ function App() {
     return <Login setToken={setToken} />;
   }
 
-  // function roleValidation() {
-  //   var isAuditor = false;
-  //   if (localStorage.getItem("roleId") == "1") {
-  //     isAuditor = true;
-  //   }
-  //   console.log(isAuditor);
-  //   return isAuditor;
-  // }
   return (
     <>
       <ThemeProvider theme={currentTheme}>
