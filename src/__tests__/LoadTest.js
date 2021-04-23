@@ -5,7 +5,7 @@ const img2 = require("/testImages/image2.jpg");
 
 
 
-Test for uploading of images
+// Test for uploading of images
 const images = [img1, img2];
 for (let concUser = 5; concUser <= 50; concUser++){
   const options = {
