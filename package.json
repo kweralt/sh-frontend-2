@@ -17,6 +17,7 @@
     "chart.js": "^2.9.4",
     "classnames": "^2.3.1",
     "date-fns": "^2.19.0",
+    "file-saver": "^2.0.5",
     "form-data": "^4.0.0",
     "formik": "^2.2.6",
     "match-sorter": "^6.3.0",
@@ -29,6 +30,7 @@
     "react-helmet": "^6.1.0",
     "react-hook-async": "^2.1.2",
     "react-images-upload": "^1.2.8",
+    "react-multiple-image-uploader": "^1.0.3",
     "react-perfect-scrollbar": "^1.5.8",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.3",
@@ -64,6 +66,7 @@
   },
   "devDependencies": {
     "cors": "^2.8.5",
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "file-loader": "^6.1.1"
   }
 }

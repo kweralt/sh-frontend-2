@@ -5,6 +5,7 @@ import PendingUnresolved from "../components/PendingUnresolved";
 import ScoreGraph from "../components/ScoreGraph";
 import PencentageUnresolved from "../components/PencentageUnresolved";
 import NumberOfNC from "../components/NumberOfNC";
+// import NCPieChart from "../components/NCPieChart";
 import PageHeader from "../components/PageHeader";
 import ContentWrapper from "../components/ContentWrapper";
 import * as dashboardServices from "../services/dashboardServices";
@@ -18,27 +19,23 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Dashboard = () => {
+const TestDashboard = () => {
   const classes = useStyles();
-  const [data, setData] = useState({});
-  console.log(data);
-  console.log(sessionStorage);
+  // const [data, setData] = useState({});
+  // console.log(data);
 
-  useEffect(() => {
-    dashboardServices.getDashboardData().then((pageData) => {
-      console.log(pageData);
-      setData(pageData);
-    });
-  }, []);
-  console.log(data);
+  // useEffect(() => {
+  //   dashboardServices.getDashboardData().then((pageData) => setData(pageData));
+  // }, []);
+  // console.log(data);
   return (
     <ContentWrapper>
       <div className={classes.root}>
         <PageHeader
-          title={"Audit Records for " + data.institution}
+          title={"Audit Records for " + "test"}//data.institution}
           icon={<SupervisorAccountTwoToneIcon fontSize="medium" />}
         />
-        <Container maxWidth={false}>
+        {/* <Container maxWidth={false}>
           <Grid container spacing={3}>
             <Grid item lg={6} sm={6} xl={6} xs={12}>
               <NumberOfNC monthlyData={data.ncCount} />
@@ -47,8 +44,8 @@ const Dashboard = () => {
               <PencentageUnresolved data={data.unresolvedNCs} />
             </Grid>
             <Grid item lg={12} md={12} xl={12} xs={12}>
-              <ScoreGraph dataObjects={data.monthlyScoresByType} />
-            </Grid>
+              <ScoreGraph dataObjects={data.outletScores} />
+            </Grid> */}
             {/* <Grid
             item
             lg={12}
@@ -59,14 +56,14 @@ const Dashboard = () => {
             <NCPieChart />
           </Grid> */}
 
-            <Grid item lg={12} md={12} xl={12} xs={12}>
+            {/* <Grid item lg={12} md={12} xl={12} xs={12}>
               <PendingUnresolved data={data.nonComplianceRecords} />
             </Grid>
           </Grid>
-        </Container>
+        </Container> */}
       </div>
     </ContentWrapper>
   );
 };
 
-export default Dashboard;
+export default TestDashboard;

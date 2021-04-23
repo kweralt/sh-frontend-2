@@ -43,6 +43,7 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(3, 0),
   },
   subSection: {
+    padding: theme.spacing(2, 0, 0),
     margin: theme.spacing(3, 0),
   },
   weightageLabel: {
@@ -95,78 +96,19 @@ export default function ChecklistForm({ questions, checklistType = 0 }) {
 
     if (validateInputs()) {
       reportServices
-        .submitChecklist(values, pictures, checklistType, score)
+        .submitChecklist(values, pictures, checklistType)
         .then((result) => {
           console.log(result);
-          if (result === 200) {
-            setNotify({
-              isOpen: true,
-              message: "Submitted successfully",
-              type: "success",
-            });
-          } else {
-            setNotify({
-              isOpen: true,
-              message: "Error submitting report",
-              type: "error",
-            });
-          }
-        })
-        .catch((err) => {
-          console.error(err);
+          // questions = [];
           setNotify({
             isOpen: true,
-            message: "Error submitting report",
-            type: "error",
+            message: "Submitted successfully",
+            type: "success",
           });
-        });
+        })
+        .catch((err) => console.error(err));
     }
   };
-
-  const calculateScore = (data) => {
-    var value = "value";
-    var pshDemerit = 0;
-    var hgcDemerit = 0;
-    var fhDemerit = 0;
-    var hcDemerit = 0;
-    var wshDemerit = 0;
-
-    for (var i=0; i<13; i++){
-      // console.log(data[i][value]);
-      pshDemerit += parseInt(data[i][value]);
-    }
-    var pshScore = (13 - pshDemerit)/100*10;
-    console.log("PSH Score: " + pshScore + "/10");
-
-    for (var i=14; i<30; i++){
-      // console.log(parseInt(data[i][value]));
-      hgcDemerit += parseInt(data[i][value]);
-    }
-    var hgcScore = (15 - hgcDemerit)/100*20;
-    console.log("HGC Score: " + hgcScore + "/20");
-
-    for (var i=31; i<67; i++){
-      // console.log(parseInt(data[i][value]));
-      fhDemerit += parseInt(data[i][value]);
-    }
-    var fhScore = (37 - hgcDemerit)/100*35;
-    console.log("FH Score: " + fhScore + "/35");
-
-    for (var i=67; i<78; i++){
-      // console.log(parseInt(data[i][value]));
-      hcDemerit += parseInt(data[i][value]);
-    }
-    var hcScore = (11 - hcDemerit)/100*15;
-    console.log("HC Score: " + hcScore + "/15");
-
-    for (var i=78; i<96; i++){
-      // console.log(parseInt(data[i][value]));
-      hgcDemerit += parseInt(data[i][value]);
-    }
-    var wshScore = ( - wshDemerit)/100*20;
-    console.log("WSH Score: " + wshScore + "/20");
-  }
-
   const handleClearChecklist = () => {
     setConfirmDialog({
       ...confirmDialog,
@@ -180,7 +122,7 @@ export default function ChecklistForm({ questions, checklistType = 0 }) {
   const createChecklistFields = () => {
     let data = [];
 
-    questions.forEach((category) => {
+questions.forEach((category) => {
       data.push({
         categoryName: category.category,
         weightage: category.weightage,
@@ -300,7 +242,6 @@ export default function ChecklistForm({ questions, checklistType = 0 }) {
                               label={item.question}
                               value={getSelectValue(item.id)}
                               onChange={handleChecklistSelect}
-                              
                               items={responseObject}
                               // row={false}
                             />
@@ -393,7 +334,6 @@ export default function ChecklistForm({ questions, checklistType = 0 }) {
               }}
             />
           </Grid>
-
           <Notification notify={notify} setNotify={setNotify} />
           <ConfirmDialog
             confirmDialog={confirmDialog}

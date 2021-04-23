@@ -4,8 +4,10 @@ import { ThemeProvider } from "@material-ui/core/styles";
 import { useTheme } from "../theme";
 import Reports from "../pages/Reports";
 import Tenants from "../pages/Tenants";
-import Dashboard from "../pages/Dashboard";
+// import Dashboard from "../pages/Dashboard";
 import Directory from "../pages/Directory";
+import TenantActions from "../pages/TenantActions";
+import TenantSubmission from "../components/TenantSubmission";
 import TenantDashboard from "../pages/TenantDashboard";
 // import Home from "../pages/Home";
 import Login from "../pages/Login";
@@ -24,14 +26,6 @@ function App() {
     return <Login setToken={setToken} />;
   }
 
-  // function roleValidation() {
-  //   var isAuditor = false;
-  //   if (localStorage.getItem("roleId") == "1") {
-  //     isAuditor = true;
-  //   }
-  //   console.log(isAuditor);
-  //   return isAuditor;
-  // }
   return (
     <>
       <ThemeProvider theme={currentTheme}>
@@ -42,6 +36,12 @@ function App() {
               setCurrentTheme={setCurrentTheme}
             />
             <Switch>
+              <Route path="/actions">
+                <TenantActions/>
+              </Route>
+              <Route path="/tenants/submission">
+                <TenantSubmission/>
+              </Route>
               <Route path="/reports">
                 <Reports />
               </Route>
