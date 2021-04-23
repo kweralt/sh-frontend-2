@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
 export default function TenantActions(){
     const classes = useStyles();
     const [reports, setReports] = useState([]);
-    const id = 30;
+    const id = localStorage.getItem("userId");
 
     const getReports = async () => {
         const data = await rectificationServices.getUnresolvedNC(id);

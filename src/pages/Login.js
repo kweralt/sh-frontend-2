@@ -75,9 +75,10 @@ export default function Login({ setToken }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (validate()) {
-      console.log("testing");
+      // console.log("testing");
       const token = await loginUser(values);
-      setToken(token);
+      console.log(token);
+      setToken(token.user);
     }
   };
 
