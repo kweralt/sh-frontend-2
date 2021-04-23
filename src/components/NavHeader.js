@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, Component } from "react";
 import {
   AppBar,
   Toolbar,
@@ -22,7 +22,11 @@ import {
   PowerSettingsNew,
   Menu,
 } from "@material-ui/icons";
-import { Link as RouterLink, useLocation } from "react-router-dom";
+import { Link as RouterLink, Redirect, useLocation } from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+
+import useToken from "../App/useToken";
+import Login from "../pages/Login";
 export const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
@@ -62,6 +66,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+
 function Header(props) {
   const { container } = props;
   const classes = useStyles();
@@ -89,7 +94,7 @@ function Header(props) {
         ].map(({ text, icon }, index) => (
           <ListItem
             component={RouterLink}
-            selected={pathname === `/${text}`}
+            // selected={pathname === `/${text}`}
             to={`/${text}`}
             button
             key={text}
@@ -147,7 +152,7 @@ function Header(props) {
             <ChatBubbleOutline fontSize="small" />
           </IconButton>
           <IconButton color="inherit" edge="end">
-            <PowerSettingsNew fontSize="small" />
+            <PowerSettingsNew fontSize="small"/>
           </IconButton>
         </Toolbar>
       </AppBar>

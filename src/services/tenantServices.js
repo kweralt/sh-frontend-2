@@ -1,7 +1,8 @@
 import * as reqs from "../requests/requests";
 
 export async function getTenants() {
-  const url = reqs.createUrl("/users/tenants");
+  const auditorId = localStorage.getItem("userId");
+  const url = reqs.createUrl(`/users/tenants/${auditorId}`);
   return await fetch(url, reqs.generateRequestData("GET", null))
     .then((response) => response.json());
 }

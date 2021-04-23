@@ -6,7 +6,7 @@ import { useEffect } from "react";
 
 const initialFValues = {
   // id: 0,
-  UserName: "",
+  name: "",
   Email: "",
   Password: ""
 };
@@ -19,7 +19,7 @@ export default function TenantForm(props) {
     let temp = { ...errors };
 
     if ("UserName" in fieldValues)
-      temp.UserName = fieldValues.UserName ? "" : "This field is required.";
+      temp.name = fieldValues.name ? "" : "This field is required.";
     if ("Email" in fieldValues)
       temp.Email = /$^|.+@.+..+/.test(fieldValues.Email) // TODO: Check for empty email input
         ? ""
@@ -63,18 +63,18 @@ export default function TenantForm(props) {
       setValues({
         ...recordForEdit,
       });
-  }, [recordForEdit]); // when recordForEdit changed, callback {setValues} invoked to populate form with current row details
+  }, [recordForEdit, setValues]); // when recordForEdit changed, callback {setValues} invoked to populate form with current row details
 
   return (
     <Form onSubmit={handleSubmit}>
       <Grid container>
         <Grid item xs={12}>
           <Controls.Input
-            name="UserName"
+            name="name"
             label="Full Name"
-            value={values.UserName}
+            value={values.name}
             onChange={handleInputChange}
-            error={errors.UserName}
+            error={errors.name}
           />
           <Controls.Input
             label="Email"
@@ -91,7 +91,7 @@ export default function TenantForm(props) {
             error={errors.Password}
           />
           <div>
-            <Controls.Button type="submit" text="Submit" />
+            <Controls.Button type="submit" text="Submit" id="submitform"/>
             <Controls.Button text="Reset" color="default" onClick={resetForm} />
           </div>
         </Grid>

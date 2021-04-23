@@ -8,9 +8,11 @@ import Dashboard from "../pages/Dashboard";
 import Directory from "../pages/Directory";
 import TenantActions from "../pages/TenantActions";
 import TenantSubmission from "../components/TenantSubmission";
+import TenantDashboard from "../pages/TenantDashboard";
 // import Home from "../pages/Home";
 import Login from "../pages/Login";
 import useToken from "./useToken";
+import RouteWrapper from "../components/RouteWrapper";
 
 function App() {
   const [currentTheme, setCurrentTheme] = useTheme();
@@ -18,9 +20,20 @@ function App() {
   const { token, setToken } = useToken();
   // Login page rendered each time there is not a stored user token
   // display <Login /> when token==false, pass in setToken function to Login component
+
   if (!token) {
+    console.log(localStorage.getItem("roleId"));
     return <Login setToken={setToken} />;
   }
+
+  // function roleValidation() {
+  //   var isAuditor = false;
+  //   if (localStorage.getItem("roleId") == "1") {
+  //     isAuditor = true;
+  //   }
+  //   console.log(isAuditor);
+  //   return isAuditor;
+  // }
   return (
     <>
       <ThemeProvider theme={currentTheme}>
@@ -43,15 +56,10 @@ function App() {
               <Route path="/tenants">
                 <Tenants />
               </Route>
-              <Route path="/dashboard">
-                <Dashboard />
-              </Route>
               <Route path="/directory">
-                <Directory/>
+                <Directory />
               </Route>
-              {/* <Route path="/">
-                <Login />
-              </Route> */}
+              <Route path="/" component={RouteWrapper}></Route>
             </Switch>
           </div>
         </Router>

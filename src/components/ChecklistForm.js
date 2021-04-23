@@ -7,6 +7,7 @@ import ImageUploader from "react-images-upload";
 import RadioGroup from "./controls/RadioGroup";
 import Notification from "../components/Notification";
 import ConfirmDialog from "../components/ConfirmDialog";
+import computeScore from "../utils/scoreComputation";
 
 const responseObject = [
   { id: 0, title: "Yes" },
@@ -15,6 +16,7 @@ const responseObject = [
 ];
 
 const imageExtensions = [".jpg", ".jpeg", ".gif", ".png"];
+const passingScore = 95;
 
 const useStyles = makeStyles((theme) => ({
   form: {
@@ -23,8 +25,8 @@ const useStyles = makeStyles((theme) => ({
   },
   radioGroup: {
     backgroundColor: "white",
-    padding: theme.spacing(3),
-    margin: theme.spacing(3, 0),
+    padding: theme.spacing(2),
+    margin: theme.spacing(2, 0),
     borderRadius: "15px",
     border: "solid 1px",
     borderColor: "#cccccc",
@@ -34,23 +36,29 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: "15px",
     border: "solid 1px",
     borderColor: "#cccccc",
-    padding: theme.spacing(3, 2),
-    margin: theme.spacing(3, 0),
+    padding: theme.spacing(2),
+    margin: theme.spacing(2, 0),
   },
   imageUpload: {
     margin: theme.spacing(3, 0),
   },
   subSection: {
     padding: theme.spacing(2, 0, 0),
+    margin: theme.spacing(3, 0),
   },
   weightageLabel: {
     fontStyle: "italic",
+  },
+  section: {
+    margin: theme.spacing(5, 0),
   },
 }));
 
 export default function ChecklistForm({ questions, checklistType = 0 }) {
   const classes = useStyles();
   const [pictures, setPictures] = useState([]);
+  const [score, setScore] = useState(0);
+  const [rectificationNeeded, setRectificationNeeded] = useState(false);
   const [notify, setNotify] = useState({
     isOpen: false,
     message: "",
@@ -101,7 +109,6 @@ export default function ChecklistForm({ questions, checklistType = 0 }) {
         .catch((err) => console.error(err));
     }
   };
-
   const handleClearChecklist = () => {
     setConfirmDialog({
       ...confirmDialog,
@@ -115,7 +122,7 @@ export default function ChecklistForm({ questions, checklistType = 0 }) {
   const createChecklistFields = () => {
     let data = [];
 
-    questions.map((category) => {
+questions.forEach((category) => {
       data.push({
         categoryName: category.category,
         weightage: category.weightage,
@@ -140,8 +147,8 @@ export default function ChecklistForm({ questions, checklistType = 0 }) {
         if (question.id === selectedId) {
           question.value = value;
         }
-      })
-    })
+      });
+    });
     return objectArray;
   };
 
@@ -155,6 +162,15 @@ export default function ChecklistForm({ questions, checklistType = 0 }) {
         value
       ),
     });
+    let newScore = computeScore(values.checklistResponses);
+    setScore(newScore);
+    setRectificationNeeded(newScore < passingScore)
+    if (newScore >= passingScore) {
+      setValues({
+        ...values,
+        resolveBy: ""
+      });
+    };
   };
 
   const getSelectValue = (itemId) => {
@@ -167,8 +183,8 @@ export default function ChecklistForm({ questions, checklistType = 0 }) {
     responsesArray.forEach((category) => {
       category.questions.forEach((question) => {
         if (question.id === itemId) newValue = question.value;
-      })
-    })
+      });
+    });
 
     return newValue;
   };
@@ -179,6 +195,7 @@ export default function ChecklistForm({ questions, checklistType = 0 }) {
         tenantid: "",
         checklistResponses: createChecklistFields(questions),
         files: [],
+        resolveBy: "",
       });
     }
   }, [questions]);
@@ -187,21 +204,25 @@ export default function ChecklistForm({ questions, checklistType = 0 }) {
     return (
       <Form>
         <div className={classes.form}>
-          <Typography variant="h4">Le Checklist of Tears</Typography>
-          <div className={classes.inputField}>
-            <Typography variant="body1">
-              Enter ID of tenant to be audited
-            </Typography>
-            <TextField
-              required
-              name="tenantid"
-              variant="standard"
-              value={values.tenantid}
-              onChange={handleInputChange}
-            />
+          <Typography variant="h4">Checklist for Audit Report</Typography>
+          <div className={classes.section}>
+            <Typography variant="h5">Section: Tenant Information</Typography>
+            <div className={classes.inputField}>
+              <Typography variant="body1">
+                Enter ID of retail tenant to be audited
+              </Typography>
+              <TextField
+                required
+                name="tenantid"
+                variant="standard"
+                value={values.tenantid}
+                onChange={handleInputChange}
+              />
+            </div>
           </div>
+
           {questions.map((category) => (
-            <Grid sm={12}>
+            <div className={classes.section}>
               <Typography variant="h5">Section: {category.category}</Typography>
               <Typography variant="body1" className={classes.weightageLabel}>
                 Weightage: {category.weightage}
@@ -222,7 +243,7 @@ export default function ChecklistForm({ questions, checklistType = 0 }) {
                               value={getSelectValue(item.id)}
                               onChange={handleChecklistSelect}
                               items={responseObject}
-                              row={false}
+                              // row={false}
                             />
                           </div>
                         );
@@ -233,10 +254,27 @@ export default function ChecklistForm({ questions, checklistType = 0 }) {
                   </div>
                 ))}
               </div>
-            </Grid>
+            </div>
           ))}
-          <div>
-            <Typography variant="h5">Photos of Non-Compliances</Typography>
+          <div className={classes.section}>
+            <Typography variant="h5">Section: Comments</Typography>
+            <div className={classes.inputField}>
+              <Typography variant="body1">Additional Comments</Typography>
+              <TextField
+                name="comments"
+                id="outlined-multiline-static"
+                multiline
+                rowsMax={10}
+                variant="standard"
+                onChange={handleInputChange}
+              />
+            </div>
+          </div>
+
+          <div className={classes.section}>
+            <Typography variant="h5">
+              Section: Photos of Non-Compliances
+            </Typography>
             <ImageUploader
               label="Non-compliance images"
               withIcon={true}
@@ -246,34 +284,56 @@ export default function ChecklistForm({ questions, checklistType = 0 }) {
               maxFileSize={5242880}
             />
           </div>
-          <Controls.Button
-            color="primary"
-            text="Submit"
-            onClick={() => {
-              setConfirmDialog({
-                isOpen: true,
-                title: "Are you sure you want to submit this report?",
-                subTitle: "",
-                onConfirm: () => {
-                  handleSubmit();
-                },
-              });
-            }}
-          />
-          <Controls.Button
-            color="default"
-            text="Clear"
-            onClick={() => {
-              setConfirmDialog({
-                isOpen: true,
-                title: "Are you sure you want to clear this checklist?",
-                subTitle: "Like really really sure?",
-                onConfirm: () => {
-                  handleClearChecklist();
-                },
-              });
-            }}
-          />
+          <div className={classes.section}>
+            <Typography variant="h5">
+              Section: Rectification Deadline
+            </Typography>
+            <div className={classes.inputField}>
+              <Typography variant="h6">Total score: {score} %</Typography>
+              {rectificationNeeded ? (
+                <Controls.DatePicker
+                  name="resolveBy"
+                  label="To be resolved By"
+                  value={values.resolveBy}
+                  onChange={handleInputChange}
+                />
+              ) : (
+                <Typography variant="body1">
+                  No rectification required.
+                </Typography>
+              )}
+            </div>
+          </div>
+          <Grid container direction="row" justify="center" alignItems="stretch">
+            <Controls.Button
+              color="primary"
+              text="Submit"
+              onClick={() => {
+                setConfirmDialog({
+                  isOpen: true,
+                  title: "Are you sure you want to submit this report?",
+                  subTitle: "",
+                  onConfirm: () => {
+                    handleSubmit();
+                  },
+                });
+              }}
+            />
+            <Controls.Button
+              color="default"
+              text="Clear"
+              onClick={() => {
+                setConfirmDialog({
+                  isOpen: true,
+                  title: "Are you sure you want to clear this checklist?",
+                  subTitle: "Like really really sure?",
+                  onConfirm: () => {
+                    handleClearChecklist();
+                  },
+                });
+              }}
+            />
+          </Grid>
           <Notification notify={notify} setNotify={setNotify} />
           <ConfirmDialog
             confirmDialog={confirmDialog}

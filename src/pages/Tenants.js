@@ -37,7 +37,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const headCells = [
-  { id: "fullName", label: "Tenant Name" },
+  { id: "TenantId", label: "Tenant Id" },
+  { id: "name", label: "Tenant Name" },
   { id: "email", label: "Email Address" },
   { id: "actions", label: "Actions", disableSorting: true },
 ];
@@ -62,12 +63,15 @@ export default function Tenants() {
     title: "",
     subTitle: "",
   });
+  const [institutionInfo, setInstitutionInfo] = useState({});
 
-  const getRecords = async () => {
-    const data = await tenantServices.getTenants();
-    // console.log(data);
-    setRecords(data.data);
-  }
+  const getRecords = () => {
+    tenantServices.getTenants().then((data) => {
+      console.log(data);
+      setRecords(data.tenantRecords);
+      setInstitutionInfo(data.institutionInfo);
+    });
+  };
 
   useEffect(() => {
     getRecords();
@@ -87,7 +91,7 @@ export default function Tenants() {
         if (target.value === "") return items;
         else
           return items.filter((x) =>
-            x.UserName.toLowerCase().includes(target.value.toLowerCase())
+            x.name.toLowerCase().includes(target.value.toLowerCase())
           );
       },
     });
@@ -128,13 +132,14 @@ export default function Tenants() {
     <ContentWrapper>
       <div className={classes.root}>
         <PageHeader
-          title="New Tenant"
+          title={"Tenants in " + institutionInfo.name}
           subTitle="Form design with validation"
           icon={<PeopleOutlineTwoTone fontSize="large" />}
         />
         <Paper className={classes.pageContent}>
           <Toolbar>
             <Controls.Input
+              id="searchtenants"
               label="Search Tenants"
               InputProps={{
                 startAdornment: (
@@ -146,7 +151,8 @@ export default function Tenants() {
               onChange={handleSearch}
             />
             <Controls.Button
-              text="Add"
+              id="addtenants"
+              text="Add New Tenant"
               variant="outlined"
               startIcon={<Add />}
               onClick={() => {
@@ -159,8 +165,9 @@ export default function Tenants() {
             <TblHead />
             <TableBody>
               {recordsAfterPagingAndSorting().map((item) => (
-                <TableRow key={item.UserId}>
-                  <TableCell>{item.UserName}</TableCell>
+                <TableRow key={item.TenantId}>
+                  <TableCell>{item.TenantId}</TableCell>
+                  <TableCell>{item.name}</TableCell>
                   <TableCell>{item.Email}</TableCell>
                   <TableCell>
                     <Controls.ActionButton
